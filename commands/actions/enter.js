@@ -4,7 +4,7 @@ const { state } = require('../../state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('../../channel.js');
 const { capitalizeOnlyFirst } = require('../../utils.js');
 
-const choices = playChannels.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
+const choices = playChannelNames.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
 
 const enter = async function(guild, player, choice) {
 	const playerState = state.players.find(p => p.id === player.id);
