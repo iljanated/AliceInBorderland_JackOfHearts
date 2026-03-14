@@ -25,11 +25,11 @@ const initialise = async function(guild) {
 
 	const rulesEmbed = new EmbedBuilder()
 		.setColor(0x0099ff)
-		.setTitle(`Round ${state.round}`)
+		.setTitle('Rulebook')
 		.setTimestamp()
 		.setFooter({ text: 'Good luck!' });
 
-	privateEmbed.addFields(
+	rulesEmbed.addFields(
 		{
 			name: 'Commands',
 			value: `You can execute actions using slash-commands.
@@ -71,14 +71,14 @@ const initialise = async function(guild) {
 			name: 'Beta software',
 			value: `This is beta software.
 			I'm still figuring out how discord bot programming works and have no idea what will happen when multiple concurrent players join the server.
-			If the bot goes down for a large amount of time causing an unfair disadvantage for players from certain timezones, the deadline for that round will be moved.
+			If the bot goes down for a large amount of time - causing an unfair disadvantage for players from different timezones - the deadline for that round will be moved.
 			
 			***Please don't try to game the system.***
 			If you spot a bug, contact me immediatly, so the game isn't ruined for everyone.`,
 		},
 	);
 
-	const sent = await rulesChannel.send(rulesEmbed);
+	const sent = await rulesChannel.send({ embeds: [rulesEmbed] });
 	sent.pin();
 
 	await createChannel(guild, deadChannelName, false, false);
