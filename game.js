@@ -153,7 +153,7 @@ const startRound = async function(guild) {
 		const members = await guild.members.fetch({ query: playerState.name, limit: 1 });
 		const player = members.first().user;
 
-		const powerIndex = playerState.powers.findIndex(p => p.name === 'mute');
+		const powerIndex = playerState.powers.findIndex(p => p.name === 'mute' || p.name === 'amplify');
 
 		await addPlayerToChannel(player, corridorChannel, false, powerIndex < 0);
 

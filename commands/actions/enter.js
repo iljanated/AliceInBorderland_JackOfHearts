@@ -47,7 +47,7 @@ const enter = async function(guild, player, choice) {
 
 	await removePlayerFromChannel(player, playerChannel);
 
-	const mutePowerIndex = playerState.powers.findIndex(p => p.name === 'mute');
+	const mutePowerIndex = playerState.powers.findIndex(p => p.name === 'mute' || p.name === 'amplify');
 
 	await addPlayerToChannel(player, targetChannel, false, mutePowerIndex < 0);
 
