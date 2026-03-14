@@ -14,6 +14,13 @@ const whisper = async function(guild, player, target, whisperMessage) {
 		return ('Dead players can\'t whisper.');
 	}
 
+	const powerIndex = playerState.powers.findIndex(p => p.name === 'amplify');
+
+	if (powerIndex >= 0) {
+		return ('You can\'t whisper.');
+	}
+
+
 	if (modIds.includes(target.id)) {
 		return ('You don\'t need to whisper to the GM. Just mention him in your private channel.');
 	}

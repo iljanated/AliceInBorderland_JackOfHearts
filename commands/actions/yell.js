@@ -13,6 +13,12 @@ const yell = async function(guild, player, yellMessage) {
 		return ('Dead players can\'t yell.');
 	}
 
+	const powerIndex = playerState.powers.findIndex(p => p.name === 'mute');
+
+	if (powerIndex >= 0) {
+		return ('You can\'t yell.');
+	}
+
 	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
 
 	for ([id, channel] of channels) {

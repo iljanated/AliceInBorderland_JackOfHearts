@@ -82,7 +82,7 @@ const powers = {
 	mute: {
 		name: 'mute',
 		description: () => {
-			return ('You are muted.\nYou can only use the command "/whisper" to communicate.\nThe effect dissipates at the end of the round.');
+			return ('You are muted.\nYou can only use the command "/whisper" in your private channel to communicate.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 	},

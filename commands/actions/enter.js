@@ -46,7 +46,10 @@ const enter = async function(guild, player, choice) {
 	await playerChannel.send(`***<@${player.id}> leaves the room through door "${choice}".***`);
 
 	await removePlayerFromChannel(player, playerChannel);
-	await addPlayerToChannel(player, targetChannel);
+
+	const mutePowerIndex = playerState.powers.findIndex(p => p.name === 'mute');
+
+	await addPlayerToChannel(player, targetChannel, false, mutePowerIndex < 0);
 
 	await targetChannel.send(`***<@${player.id}> enters the room.***`);
 

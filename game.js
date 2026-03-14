@@ -49,10 +49,10 @@ const createChannel = async function(guild, name, allowCommands, addDead) {
 	return channel;
 };
 
-const addPlayerToChannel = async function(player, channel, history) {
+const addPlayerToChannel = async function(player, channel, history = true, send = true) {
 	await channel.permissionOverwrites.create(player.id, {
 		ViewChannel: true,
-		SendMessages: true,
+		SendMessages: send,
 		ReadMessageHistory: history,
 	});
 };
@@ -152,7 +152,10 @@ const startRound = async function(guild) {
 	for (playerState of playerStates) {
 		const members = await guild.members.fetch({ query: playerState.name, limit: 1 });
 		const player = members.first().user;
-		await addPlayerToChannel(player, corridorChannel);
+
+		const powerIndex = playerState.powers.findIndex(p => p.name === 'mute');
+
+		await addPlayerToChannel(player, corridorChannel, false, powerIndex < 0);
 
 		const privateEmbed = new EmbedBuilder()
 			.setColor(0x0099ff)
