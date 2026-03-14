@@ -30,6 +30,15 @@ const whisper = async function(guild, player, target, whisperMessage) {
 	if (!targetPlayerState.alive) {
 		return ('You can\'t whisper to dead people.');
 	}
+	
+	const anonymousPowerIndex = playerState.powers.findIndex(p => p.name === 'anonymous');
+
+	if (anonymousPowerIndex >= 0) {
+		const privateChannel = guild.channels.cache.find(c => c.name === `player_${target.username}`);
+		privateChannel.send(`***You receive an anonymous message:***\n${whisperMessage}`);
+
+		return (`You sent '${whisperMessage}' anonymously to <@${target.id}>.`);
+	}
 
 	const shareChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
