@@ -2,6 +2,13 @@ const { SlashCommandBuilder } = require('discord.js');
 const { modIds } = require('../../config.json');
 
 const update = async function(guild, player, choice) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	return 'success';
 };
 

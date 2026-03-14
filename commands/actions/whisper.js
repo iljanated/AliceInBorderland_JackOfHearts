@@ -4,6 +4,13 @@ const { state } = require('../../state.js');
 const { scramble } = require('../../utils');
 
 const whisper = async function(guild, player, target, whisperMessage) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	if (modIds.includes(player.id)) {
 		return ('GM\'s don\'t whisper.');
 	}

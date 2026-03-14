@@ -1,8 +1,8 @@
-const { SlashCommandBuilder, MessageFlags, createChannel } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { modIds, playerChannelPrefix } = require('../../config.json');
 const { startRound } = require('../../game.js');
 const { state, saveState } = require('../../state.js');
-const { addPlayerToChannel } = require('../../channel.js');
+const { addPlayerToChannel, createChannel } = require('../../channel.js');
 
 const start = async function(guild) {
 	const members = await guild.members.fetch();
@@ -29,6 +29,7 @@ const start = async function(guild) {
 
 	state.round = 0;
 	state.players = players;
+	state.started = true;
 	saveState();
 
 	await startRound(guild);

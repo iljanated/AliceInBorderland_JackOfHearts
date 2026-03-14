@@ -3,6 +3,13 @@ const { modIds, playChannelNames } = require('../../config.json');
 const { state } = require('../../state.js');
 
 const yell = async function(guild, player, yellMessage) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	if (modIds.includes(player.id)) {
 		return ('GM\'s don\'t yell.');
 	}

@@ -6,6 +6,13 @@ const { capitalizeOnlyFirst } = require('../../utils.js');
 const choices = Object.values(suits).map(s => { return ({ name: capitalizeOnlyFirst(s.name), value: s.name }); });
 
 const suit = async function(guild, player, choice) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {

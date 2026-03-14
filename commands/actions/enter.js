@@ -7,6 +7,13 @@ const { capitalizeOnlyFirst } = require('../../utils.js');
 const choices = playChannelNames.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
 
 const enter = async function(guild, player, choice) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {

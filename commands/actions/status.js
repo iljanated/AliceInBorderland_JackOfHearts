@@ -3,6 +3,13 @@ const { state } = require('../../state.js');
 
 
 const status = async function(guild, player) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	const playerState = state.players.find(p => p.id === player.id);
 
 	const alivePlayers = state.players.filter(p => p.alive);

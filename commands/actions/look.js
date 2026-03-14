@@ -4,6 +4,13 @@ const { modIds, playChannelNames, suits } = require('../../config.json');
 const { pick } = require('../../utils.js');
 
 const look = async function(guild, player, target) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	if (player.id === target.id) {
 		return ('No cheating!');
 	}

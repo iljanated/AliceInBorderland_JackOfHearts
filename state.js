@@ -15,6 +15,8 @@ const clearState = async function() {
 		}
 		state.players = [];
 		state.round = 0;
+		state.started = false;
+		state.ended = false;
 	}
 	await saveState();
 };

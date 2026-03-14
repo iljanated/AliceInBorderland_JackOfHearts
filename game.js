@@ -1,11 +1,11 @@
 const { EmbedBuilder } = require('discord.js');
-const { modIds, centralChannelName, deadChannelName, suits } = require('./config.json');
+const { modIds, playChannelNames, centralChannelName, deadChannelName, suits } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('./channel.js');
 
-const kill = async function(guild, player) {
+const kill = async function(guild, player, gameShouldEnd = true) {
 	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
 
 	const playerState = state.players.find(s => s.name === player.username);
@@ -21,6 +21,10 @@ const kill = async function(guild, player) {
 
 	playerState.alive = false;
 	await saveState();
+
+	if (state.players.filter(p => p.alive) <= 1 && gameShouldEnd) {
+		await endGame(guild);
+	}
 };
 
 const endRound = async function(guild) {
@@ -49,15 +53,18 @@ const endRound = async function(guild) {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
 					if (targetState.alive) {
-						await kill(guild, player);
+						await kill(guild, player, false);
 					}
 				}
 			}
 		}
 	}
 
-	if (playerStates.filter(p => p.alive) > 1) {
-		await startRound(guild);
+	if (state.players.filter(p => p.alive) <= 1) {
+		await endGame(guild);
+	}
+	else {
+		startRound(guild);
 	}
 };
 
@@ -89,8 +96,8 @@ const startRound = async function(guild) {
 	state.round++;
 	await saveState();
 
-	const guildPlayChannels = guild.channels.cache.filter(c => playChannels.includes(c.name));
-	for ([id, channel] of guildPlayChannels) {
+	const playChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
+	for ([id, channel] of playChannels) {
 		for ([id, member] of channel.members) {
 			if (!modIds.includes(member.user.id)) {
 				await removePlayerFromChannel(member.user, channel);
@@ -125,6 +132,21 @@ const startRound = async function(guild) {
 		}
 
 		const sent = await playerChannel.send({ embeds: [privateEmbed] });
+		sent.pin();
+	}
+};
+
+const endGame = async function(guild) {
+	state.ended = true;
+	saveState();
+
+	const winner = state.players.find(p => p.alive);
+
+	const message = winner ? `***The game is over.\nThe winner is <@${winner.id}>!***` : '***The game is over.\nThere was no winner.***';
+
+	const playChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
+	for ([id, channel] of playChannels) {
+		const sent = await channel.send(message);
 		sent.pin();
 	}
 };

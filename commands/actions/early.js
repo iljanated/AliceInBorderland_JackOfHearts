@@ -8,6 +8,13 @@ const choices = [
 ];
 
 const early = async function(guild, player, choice) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {

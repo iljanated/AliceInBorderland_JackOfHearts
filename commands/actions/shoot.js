@@ -4,6 +4,13 @@ const { modIds, playChannelNames } = require('../../config.json');
 const { kill } = require('../../game.js');
 
 const shoot = async function(guild, player, target) {
+	if (!state.started) {
+		return ('The game hasn\'t started yet.');
+	}
+	if (state.ended) {
+		return ('The game is over.');
+	}
+
 
 	if (modIds.includes(player.id)) {
 		return ('The GM doesn\'t shoot players.');
