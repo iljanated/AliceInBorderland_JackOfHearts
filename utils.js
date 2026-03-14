@@ -27,8 +27,14 @@ function scramble(text, chance = 0.7, character = '.') {
 		.join('');
 }
 
+function capitalizeOnlyFirst(text) {
+	if (!text) { return (''); }
+	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
+
 module.exports = {
 	shuffle,
 	pick,
 	scramble,
+	capitalizeOnlyFirst,
 };

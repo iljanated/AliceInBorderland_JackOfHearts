@@ -1,12 +1,9 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { state, saveState } = require('../../state.js');
+const { suits } = require('../../config.json');
+const { capitalizeOnlyFirst } = require('../../utils.js');
 
-const choices = [
-	{ name: 'Hearts', value: 'hearts' },
-	{ name: 'Diamonds', value: 'diamonds' },
-	{ name: 'Clubs', value: 'clubs' },
-	{ name: 'Spades', value: 'spades' }
-];
+const choices = Object.values(suits).map(s => { return ({ name: capitalizeOnlyFirst(s.name), value: s.name }); });
 
 const suit = async function(guild, player, choice) {
 	const playerState = state.players.find(p => p.id === player.id);

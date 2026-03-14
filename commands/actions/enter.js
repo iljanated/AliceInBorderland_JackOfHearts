@@ -1,14 +1,10 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { modIds, playChannels } = require('../../config.json');
+const { modIds, playChannelNames, centralChannelName } = require('../../config.json');
 const { state } = require('../../state.js');
-const { removePlayerFromChannel, addPlayerToChannel } = require('../../game');
+const { removePlayerFromChannel, addPlayerToChannel } = require('../../channel.js');
+const { capitalizeOnlyFirst } = require('../../utils.js');
 
-const choices = [
-	{ name: 'Corridor', value: 'corridor' },
-	{ name: 'Red', value: 'red' },
-	{ name: 'Green', value: 'green' },
-	{ name: 'Blue', value: 'blue' },
-];
+const choices = playChannels.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
 
 const enter = async function(guild, player, choice) {
 	const playerState = state.players.find(p => p.id === player.id);
@@ -27,7 +23,7 @@ const enter = async function(guild, player, choice) {
 		return ('GM\'s don\'t leave rooms.');
 	}
 
-	const playerChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id));
+	const playerChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id));
 
 	if (!playerChannel) {
 		return ('You are not in a valid room.');
@@ -37,7 +33,7 @@ const enter = async function(guild, player, choice) {
 		return ('You are alredy in that room.');
 	}
 
-	if (playerChannel.name !== 'corridor' && choice !== 'corridor') {
+	if (playerChannel.name !== centralChannelName && choice !== centralChannelName) {
 		return ('There are no doors between these rooms.');
 	}
 

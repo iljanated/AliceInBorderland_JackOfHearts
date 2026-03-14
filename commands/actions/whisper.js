@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { modIds, playChannels } = require('../../config.json');
+const { modIds, playChannelNames, playerChannelPrefix } = require('../../config.json');
 const { state } = require('../../state.js');
 const { scramble } = require('../../utils');
 
@@ -30,17 +30,17 @@ const whisper = async function(guild, player, target, whisperMessage) {
 	if (!targetPlayerState.alive) {
 		return ('You can\'t whisper to dead people.');
 	}
-	
+
 	const anonymousPowerIndex = playerState.powers.findIndex(p => p.name === 'anonymous');
 
 	if (anonymousPowerIndex >= 0) {
-		const privateChannel = guild.channels.cache.find(c => c.name === `player_${target.username}`);
+		const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
 		privateChannel.send(`***You receive an anonymous message:***\n${whisperMessage}`);
 
 		return (`You sent '${whisperMessage}' anonymously to <@${target.id}>.`);
 	}
 
-	const shareChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
+	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
 	if (!shareChannel) {
 		return ('You can\'t whisper through walls. Try \'/Yell\'.');
@@ -48,7 +48,7 @@ const whisper = async function(guild, player, target, whisperMessage) {
 
 	shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage)}`);
 
-	const privateChannel = guild.channels.cache.find(c => c.name === `player_${target.username}`);
+	const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
 
 	privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);
 

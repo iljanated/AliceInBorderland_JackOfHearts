@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { state, saveState } = require('../../state.js');
-const { modIds, playChannels } = require('../../config.json');
+const { modIds, playChannelNames } = require('../../config.json');
 const { kill } = require('../../game.js');
 
 const shoot = async function(guild, player, target) {
@@ -31,7 +31,7 @@ const shoot = async function(guild, player, target) {
 		return ('You can\'t shoot dead people.');
 	}
 
-	const shareChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
+	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
 	if (!shareChannel) {
 		return ('You can\'t shoot people through walls.');
@@ -42,7 +42,7 @@ const shoot = async function(guild, player, target) {
 
 	await shareChannel.send(`***<@${player.id}> pulls out a gun and shoots <@${target.id}>.***`);
 
-	const otherChannels = guild.channels.cache.filter(c => playChannels.includes(c.name) && !(c.id === shareChannel.id));
+	const otherChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name) && !(c.id === shareChannel.id));
 
 	for ([id, channel] of otherChannels) {
 		await channel.send('***There is a loud BANG.\nSomeone fired a gun!***');

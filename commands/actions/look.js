@@ -1,10 +1,10 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { state } = require('../../state.js');
-const { modIds, playChannels } = require('../../config.json');
+const { modIds, playChannelNames, suits } = require('../../config.json');
 const { pick } = require('../../utils.js');
 
 const look = async function(guild, player, target) {
-	if(player.id === target.id) {
+	if (player.id === target.id) {
 		return ('No cheating!');
 	}
 
@@ -24,7 +24,7 @@ const look = async function(guild, player, target) {
 		return (`<@${target.id}>'s suit is "${targetPlayerState.suit}".`);
 	}
 
-	const shareChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
+	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
 	if (!shareChannel) {
 		return ('You can\'t see through walls.');
@@ -43,7 +43,7 @@ const look = async function(guild, player, target) {
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
 	if (blurPowerIndex >= 0) {
-		const suit = ['diamonds', 'hearts'].includes(finalTargetPlayerState.suit) ? 'red' : 'black';
+		const suit = suits[finalTargetPlayerState.suit].color;
 		return (`<@${target.id}>'s suit is ${suit}.`);
 	}
 

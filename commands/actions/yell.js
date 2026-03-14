@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { modIds, playChannels } = require('../../config.json');
+const { modIds, playChannelNames } = require('../../config.json');
 const { state } = require('../../state.js');
 
 const yell = async function(guild, player, yellMessage) {
@@ -19,7 +19,7 @@ const yell = async function(guild, player, yellMessage) {
 		return ('You can\'t yell.');
 	}
 
-	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
+	const channels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 
 	for ([id, channel] of channels) {
 		channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);

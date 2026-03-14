@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { modIds, generalChannels } = require('../../config.json');
+const { modIds, generalChannelNames, playChannelNames, deadChannelName } = require('../../config.json');
 const { clearState } = require('../../state.js');
-const { createChannel } = require('../../game.js');
+const { createChannel } = require('../../channel.js');
 
 const initialise = async function(guild) {
 	await clearState();
@@ -9,7 +9,7 @@ const initialise = async function(guild) {
 	const channels = await guild.channels.fetch();
 
 	for ([id, channel] of channels) {
-		if (generalChannels.includes(channel.name)) {
+		if (generalChannelNames.includes(channel.name)) {
 			const newChannel = await channel.clone({
 				reason: 'reset gameserver',
 			});
@@ -21,11 +21,10 @@ const initialise = async function(guild) {
 		}
 	}
 
-	await createChannel(guild, 'dead', false, false);
-	await createChannel(guild, 'corridor', true, true);
-	await createChannel(guild, 'red', true, true);
-	await createChannel(guild, 'green', true, true);
-	await createChannel(guild, 'blue', true, true);
+	await createChannel(guild, deadChannelName, false, false);
+	for (channelName of playChannelNames) {
+		await createChannel(guild, channelName, true, true);
+	}
 };
 
 module.exports = {

@@ -1,68 +1,9 @@
-const { ChannelType, PermissionsBitField, EmbedBuilder } = require('discord.js');
-const { modIds, playChannels } = require('./config.json');
+const { EmbedBuilder } = require('discord.js');
+const { modIds, centralChannelName, deadChannelName, suits } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
-
-const createChannel = async function(guild, name, allowCommands, addDead) {
-
-	const globalDeny = [PermissionsBitField.Flags.ViewChannel];
-
-	if (!allowCommands) {
-		globalDeny.push(PermissionsBitField.Flags.UseApplicationCommands);
-	}
-
-	const permissionOverwrites = [
-		{
-			id: guild.id,
-			deny: globalDeny,
-		},
-	];
-
-	for (modId of modIds) {
-		permissionOverwrites.push(
-			{
-				id: modId,
-				allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-			});
-	}
-
-	if (addDead) {
-		const roles = await guild.roles.fetch();
-		const role = roles.find(r => r.name === 'dead');
-
-		permissionOverwrites.push(
-			{
-				id: role.id,
-				allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ReadMessageHistory],
-				deny: [PermissionsBitField.Flags.SendMessages],
-			},
-		);
-	}
-
-	const channel = await guild.channels.create({
-		name: name,
-		type: ChannelType.GuildText,
-		permissionOverwrites: permissionOverwrites,
-	});
-
-	return channel;
-};
-
-const addPlayerToChannel = async function(player, channel, history = true, send = true) {
-	await channel.permissionOverwrites.create(player.id, {
-		ViewChannel: true,
-		SendMessages: send,
-		ReadMessageHistory: history,
-	});
-};
-
-const removePlayerFromChannel = async function(player, channel) {
-	await channel.permissionOverwrites.create(player.id, {
-		ViewChannel: false,
-		SendMessages: false,
-	});
-};
+const { removePlayerFromChannel, addPlayerToChannel } = require('./channel.js');
 
 const kill = async function(guild, player) {
 	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
@@ -75,7 +16,7 @@ const kill = async function(guild, player) {
 		sent.pin();
 	}
 
-	const deadChannel = guild.channels.cache.find(c => c.name === 'dead');
+	const deadChannel = guild.channels.cache.find(c => c.name === deadChannelName);
 	await addPlayerToChannel(player, deadChannel, true);
 
 	playerState.alive = false;
@@ -97,9 +38,19 @@ const endRound = async function(guild) {
 	for (power of powersArray) {
 		for (playerState of playerStates) {
 			if (playerState.alive && playerState.powers.find(p => p.name === power.name)) {
-				if (!power.evaluate(playerState, playerStates)) {
-					const player = guild.members.cache.find(p => p.user.id === playerState.id);
-					await kill(guild, player);
+				if (power.name === 'link') {
+					const powerState = playerState.powers.find(p => p.name === power.name);
+					const targetState = playerStates.find(p => p.id === powerState.target);
+					if (!targetState.alive) {
+						await kill(guild, player);
+					}
+				}
+				else if (power.name === 'mutex') {
+					const powerState = playerState.powers.find(p => p.name === power.name);
+					const targetState = playerStates.find(p => p.id === powerState.target);
+					if (targetState.alive) {
+						await kill(guild, player);
+					}
 				}
 			}
 		}
@@ -116,7 +67,7 @@ const startRound = async function(guild) {
 	shuffle(shuffledPowers);
 	for (let i = 0; i < playerStates.length; i++) {
 		const playerState = playerStates[i];
-		playerState.suit = pick(['diamonds', 'hearts', 'clubs', 'spades']);
+		playerState.suit = pick(Object.values(suits).map(s => s.name));
 		playerState.early = false;
 		playerState.suitChoice = undefined;
 
@@ -147,7 +98,7 @@ const startRound = async function(guild) {
 		}
 	}
 
-	const corridorChannel = guild.channels.cache.find(c => c.name === 'corridor');
+	const corridorChannel = guild.channels.cache.find(c => c.name === centralChannelName);
 
 	for (playerState of playerStates) {
 		const members = await guild.members.fetch({ query: playerState.name, limit: 1 });
@@ -179,9 +130,6 @@ const startRound = async function(guild) {
 };
 
 module.exports = {
-	createChannel,
-	addPlayerToChannel,
-	removePlayerFromChannel,
 	startRound,
 	endRound,
 	kill,
