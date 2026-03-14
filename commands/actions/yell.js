@@ -1,7 +1,25 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { modIds, playChannels } = require('../../config.json');
+const { state } = require('../../state.js');
 
-const yell = async function(guild, player, choice) {
-	return 'success';
+const yell = async function(guild, player, yellMessage) {
+	if (modIds.includes(player.id)) {
+		return ('GM\'s don\'t yell.');
+	}
+
+	const playerState = state.players.find(p => p.id === player.id);
+
+	if (!playerState.alive) {
+		return ('Dead players can\'t yell.');
+	}
+
+	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
+
+	for ([id, channel] of channels) {
+		channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);
+	}
+
+	return (`You yelled '${yellMessage}'.`);
 };
 
 module.exports = {
@@ -13,7 +31,7 @@ module.exports = {
 		const player = interaction.user;
 		const yellMessage = interaction.options.getString('message', true);
 		try {
-			await interaction.deferReply();
+			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 			const message = await yell(interaction.guild, player, yellMessage);
 

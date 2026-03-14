@@ -1,8 +1,13 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { state } = require('../../state.js');
 const { modIds, playChannels } = require('../../config.json');
+const { pick } = require('../../utils.js');
 
 const look = async function(guild, player, target) {
+	if(player.id === target.id) {
+		return ('No cheating!');
+	}
+
 	if (modIds.includes(target.id)) {
 		return ('The GM is not a participant in the game.');
 	}
@@ -12,6 +17,8 @@ const look = async function(guild, player, target) {
 	if (!targetPlayerState.alive) {
 		return (`<@${target.id}> is dead.`);
 	}
+
+	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {
 		return (`<@${target.id}>'s suit is "${targetPlayerState.suit}".`);
@@ -23,7 +30,24 @@ const look = async function(guild, player, target) {
 		return ('You can\'t see through walls.');
 	}
 
-	return (`<@${target.id}>'s suit is "${targetPlayerState.suit}".`);
+	const blindPowerIndex = playerState.powers.findIndex(p => p.name === 'blind');
+
+	if (blindPowerIndex >= 0) {
+		return ('You are blind.');
+	}
+
+	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
+
+	const finalTargetPlayerState = randomPowerIndex < 0 ? targetPlayerState : pick(state.players);
+
+	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
+
+	if (blurPowerIndex >= 0) {
+		const suit = ['diamonds', 'hearts'].includes(finalTargetPlayerState.suit) ? 'red' : 'black';
+		return (`<@${target.id}>'s suit is ${suit}.`);
+	}
+
+	return (`<@${target.id}>'s suit is "${finalTargetPlayerState.suit}".`);
 };
 
 module.exports = {

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { state, saveState } = require('../../state.js');
 
 const choices = [
 	{ name: 'Hearts', value: 'hearts' },

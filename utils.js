@@ -17,7 +17,18 @@ function pick(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
+function scramble(text, chance = 0.7, character = '.') {
+	return text
+		.split('')
+		.map(char => {
+			if (char === ' ') return ' ';
+			return Math.random() < chance ? character : char;
+		})
+		.join('');
+}
+
 module.exports = {
 	shuffle,
 	pick,
+	scramble,
 };
