@@ -1,9 +1,9 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { state } = require('../../state.js');
-const { config } = require('../config.json');
+const { modIds, playChannels } = require('../../config.json');
 
 const look = async function(guild, player, target) {
-	if (config.modIds.includes(target.id)) {
+	if (modIds.includes(target.id)) {
 		return ('The GM is not a participant in the game.');
 	}
 
@@ -17,7 +17,7 @@ const look = async function(guild, player, target) {
 		return (`<@${target.id}>'s suit is "${targetPlayerState.suit}".`);
 	}
 
-	const shareChannel = guild.channels.cache.find(c => config.playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
+	const shareChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
 	if (!shareChannel) {
 		return ('You can\'t see through walls.');

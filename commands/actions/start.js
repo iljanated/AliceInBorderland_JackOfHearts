@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { config } = require('../config.json');
+const { modIds } = require('../../config.json');
 const { createChannel, addPlayerToChannel, startRound } = require('../../game.js');
 const { state, saveState } = require('../../state.js');
 
@@ -9,7 +9,7 @@ const start = async function(guild) {
 	const players = [];
 
 	for ([id, member] of members) {
-		if (!config.modIds.includes(member.id)) {
+		if (!modIds.includes(member.id)) {
 			const channel = await createChannel(guild, `player_${member.user.username}`, true, true);
 
 			addPlayerToChannel(member.user, channel, true);
@@ -43,7 +43,7 @@ module.exports = {
 		try {
 			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-			if (!config.modIds.includes(interaction.user.id)) {
+			if (!modIds.includes(interaction.user.id)) {
 				throw 'access denied';
 			}
 

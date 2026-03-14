@@ -1,5 +1,5 @@
 const { ChannelType, PermissionsBitField, EmbedBuilder } = require('discord.js');
-const { config } = require('./config.json');
+const { modIds, playChannels } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
@@ -19,7 +19,7 @@ const createChannel = async function(guild, name, allowCommands, addDead) {
 		},
 	];
 
-	for (modId of config.modIds) {
+	for (modId of modIds) {
 		permissionOverwrites.push(
 			{
 				id: modId,
@@ -65,7 +65,7 @@ const removePlayerFromChannel = async function(player, channel) {
 };
 
 const kill = async function(guild, player) {
-	const channels = guild.channels.cache.filter(c => config.playChannels.includes(c.name));
+	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
 
 	const playerState = state.players.find(s => s.name === player.username);
 
@@ -138,10 +138,10 @@ const startRound = async function(guild) {
 	state.round++;
 	await saveState();
 
-	const playChannels = guild.channels.cache.filter(c => config.playChannels.includes(c.name));
-	for ([id, channel] of playChannels) {
+	const guildPlayChannels = guild.channels.cache.filter(c => playChannels.includes(c.name));
+	for ([id, channel] of guildPlayChannels) {
 		for ([id, member] of channel.members) {
-			if (!config.modIds.includes(member.user.id)) {
+			if (!modIds.includes(member.user.id)) {
 				await removePlayerFromChannel(member.user, channel);
 			}
 		}

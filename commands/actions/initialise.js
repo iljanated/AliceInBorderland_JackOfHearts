@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { config } = require('../config.json');
+const { modIds, generalChannels } = require('../../config.json');
 const { clearState } = require('../../state.js');
 const { createChannel } = require('../../game.js');
 
@@ -9,7 +9,7 @@ const initialise = async function(guild) {
 	const channels = await guild.channels.fetch();
 
 	for ([id, channel] of channels) {
-		if (config.generalChannels.includes(channel.name)) {
+		if (generalChannels.includes(channel.name)) {
 			const newChannel = await channel.clone({
 				reason: 'reset gameserver',
 			});
@@ -36,7 +36,7 @@ module.exports = {
 		try {
 			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-			if (!config.modIds.includes(interaction.user.id)) {
+			if (!modIds.includes(interaction.user.id)) {
 				throw 'access denied';
 			}
 

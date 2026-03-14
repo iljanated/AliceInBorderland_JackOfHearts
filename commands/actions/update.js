@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { config } = require('../../config.json');
+const { modIds } = require('../../config.json');
 
 const update = async function(guild, player, choice) {
 	return 'success';
@@ -13,7 +13,7 @@ module.exports = {
 		try {
 			await interaction.deferReply();
 
-			if (!config.modIds.includes(interaction.user.id)) {
+			if (!modIds.includes(interaction.user.id)) {
 				throw 'access denied';
 			}
 

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { config } = require('../config.json');
+const { modIds, playChannels } = require('../../config.json');
 const { state } = require('../../state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('../../game');
 
@@ -19,15 +19,15 @@ const enter = async function(guild, player, choice) {
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'immobile');
 
-	if(powerIndex >= 0) {
+	if (powerIndex >= 0) {
 		return ('You are immobilized and can\'t leave the room.');
 	}
 
-	if (config.modIds.includes(player.id)) {
+	if (modIds.includes(player.id)) {
 		return ('GM\'s don\'t leave rooms.');
 	}
 
-	const playerChannel = guild.channels.cache.find(c => config.playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id));
+	const playerChannel = guild.channels.cache.find(c => playChannels.includes(c.name) && c.members.find(m => m.user.id === player.id));
 
 	if (!playerChannel) {
 		return ('You are not in a valid room.');
