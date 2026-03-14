@@ -1,6 +1,14 @@
 const { ChannelType, PermissionsBitField } = require('discord.js');
 const { modIds } = require('./config.json');
 
+const createPublicChannel = async function(guild, name) {
+	const channel = await guild.channels.create({
+		name: name,
+		type: ChannelType.GuildText,
+	});
+	return channel;
+};
+
 const createChannel = async function(guild, name, allowCommands, addDead) {
 
 	const globalDeny = [PermissionsBitField.Flags.ViewChannel];
@@ -62,6 +70,7 @@ const removePlayerFromChannel = async function(player, channel) {
 };
 
 module.exports = {
+	createPublicChannel,
 	createChannel,
 	addPlayerToChannel,
 	removePlayerFromChannel,
