@@ -108,7 +108,7 @@ Setting this up was a lot of work so:
 	);
 
 	const rulesSent = await rulesChannel.send({ embeds: [rulesEmbed] });
-	rulesSent.pin();
+	await rulesSent.pin();
 
 	await createChannel(guild, deadChannelName, false, false);
 	for (channelName of playChannelNames) {
@@ -123,7 +123,7 @@ Setting this up was a lot of work so:
 		const hallwaySent = await generalChannel.send({
 			files: [introAttachment],
 		});
-		hallwaySent.pin();
+		await hallwaySent.pin();
 	}
 };
 

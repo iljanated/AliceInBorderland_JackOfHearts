@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { modIds, playerChannelPrefix } = require('../../config.json');
+const { SlashCommandBuilder, MessageFlags, AttachmentBuilder } = require('discord.js');
+const { modIds, playerChannelPrefix, startImages, centralChannelName } = require('../../config.json');
 const { startRound } = require('../../game.js');
 const { state, saveState } = require('../../state.js');
 const { addPlayerToChannel, createChannel } = require('../../channel.js');
@@ -31,6 +31,17 @@ const start = async function(guild) {
 	state.players = players;
 	state.started = true;
 	saveState();
+
+	const centralChannel = guild.channels.cache.find(c => c.name === centralChannelName);
+
+	for (image of startImages) {
+		startAttachment = new AttachmentBuilder(`./assets/${image}`);
+
+		const hallwaySent = await centralChannel.send({
+			files: [startAttachment],
+		});
+		await hallwaySent.pin();
+	}
 
 	await startRound(guild);
 

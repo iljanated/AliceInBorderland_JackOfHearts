@@ -5,15 +5,48 @@ const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('./channel.js');
 
+const refreshCell = async function(guild, channelName) {
+	const channel = guild.channels.cache.find(c => c.name === channelName);
+	const playerIds = state.players.filter(p => p.alive).map(p => p.id);
+	if (channel.members.filter(m => playerIds.includes(m.user.id)) > 0) {
+		return false;
+	}
+	const newChannel = await channel.clone();
+	await newChannel.setPosition(channel.position);
+	await channel.delete();
+
+	const embed = new EmbedBuilder()
+		.setColor(0x0099ff)
+		.setTitle(channelName)
+		.setTimestamp();
+
+	embed.addFields(
+		{ name: 'Doors', value: `There is only one door.\nIt is marked ${centralChannelName}.` },
+	);
+	embed.addFields(
+		{ name: 'History', value: `When the last player leaves ${channelName}, the channel is reset and all chathistory is gone forever.` },
+	);
+
+	const sent = await newChannel.send({ embeds: [embed] });
+	await sent.pin();
+
+	return true;
+};
+
 const kill = async function(guild, player, gameShouldEnd = true) {
-	const channels = guild.channels.cache.filter(c => playChannels.includes(c.name));
+	const channels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 
 	const playerState = state.players.find(s => s.name === player.username);
 
 	for ([id, channel] of channels) {
 		await removePlayerFromChannel(player, channel);
+
+		if (channel.name !== centralChannelName) {
+			await refreshCell(guild, channel.name);
+		}
+
 		const sent = await channel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
-		sent.pin();
+		await sent.pin();
 	}
 
 	const deadChannel = guild.channels.cache.find(c => c.name === deadChannelName);
@@ -105,15 +138,21 @@ const startRound = async function(guild) {
 		}
 	}
 
+	for (channelName of playChannelNames) {
+		if (channelName !== centralChannelName) {
+			await refreshCell(guild, channelName);
+		}
+	}
+
 	const corridorChannel = guild.channels.cache.find(c => c.name === centralChannelName);
 
 	for (playerState of playerStates) {
-		const members = await guild.members.fetch({ query: playerState.name, limit: 1 });
-		const player = members.first().user;
+		const member = guild.members.cache.find(m => m.user.username === playerState.name);
+		const player = member.user;
 
 		const powerIndex = playerState.powers.findIndex(p => p.name === 'mute' || p.name === 'amplify');
 
-		await addPlayerToChannel(player, corridorChannel, false, powerIndex < 0);
+		await addPlayerToChannel(player, corridorChannel, true, powerIndex < 0);
 
 		const privateEmbed = new EmbedBuilder()
 			.setColor(0x0099ff)
@@ -132,7 +171,7 @@ const startRound = async function(guild) {
 		}
 
 		const sent = await playerChannel.send({ embeds: [privateEmbed] });
-		sent.pin();
+		await sent.pin();
 	}
 };
 
@@ -147,7 +186,7 @@ const endGame = async function(guild) {
 	const playChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 	for ([id, channel] of playChannels) {
 		const sent = await channel.send(message);
-		sent.pin();
+		await sent.pin();
 	}
 };
 
@@ -155,4 +194,5 @@ module.exports = {
 	startRound,
 	endRound,
 	kill,
+	refreshCell,
 };

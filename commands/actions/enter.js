@@ -2,6 +2,7 @@ const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { modIds, playChannelNames, centralChannelName } = require('../../config.json');
 const { state } = require('../../state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('../../channel.js');
+const { refreshCell } = require('../../game.js');
 const { capitalizeOnlyFirst } = require('../../utils.js');
 
 const choices = playChannelNames.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
@@ -12,6 +13,10 @@ const enter = async function(guild, player, choice) {
 	}
 	if (state.ended) {
 		return ('The game is over.');
+	}
+
+	if (modIds.includes(player.id)) {
+		return ('GM\'s can\'t enter rooms.');
 	}
 
 	const playerState = state.players.find(p => p.id === player.id);
@@ -50,9 +55,13 @@ const enter = async function(guild, player, choice) {
 
 	await removePlayerFromChannel(player, playerChannel);
 
+	if (playerChannel.name !== centralChannelName) {
+		await refreshCell(guild, playerChannel.name);
+	}
+
 	const mutePowerIndex = playerState.powers.findIndex(p => p.name === 'mute' || p.name === 'amplify');
 
-	await addPlayerToChannel(player, targetChannel, false, mutePowerIndex < 0);
+	await addPlayerToChannel(player, targetChannel, true, mutePowerIndex < 0);
 
 	await targetChannel.send(`***<@${player.id}> enters the room.***`);
 
@@ -70,13 +79,19 @@ module.exports = {
 		try {
 			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
+			const channelId = interaction.channel.id;
+
 			const message = await enter(interaction.guild, player, door);
 
-			if (message) {
-				await interaction.editReply(message);
-			}
-			else {
-				await interaction.deleteReply();
+			const oldChannel = interaction.guild.channels.cache.find(c => c.id === channelId);
+
+			if (oldChannel) {
+				if (message) {
+					await interaction.editReply(message);
+				}
+				else {
+					await interaction.deleteReply();
+				}
 			}
 		}
 		catch (error) {

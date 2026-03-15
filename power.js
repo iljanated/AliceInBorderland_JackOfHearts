@@ -2,7 +2,7 @@ const powers = {
 	shoot: {
 		name: 'shoot',
 		description: () => {
-			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you.\nPlayers in other rooms will hear you.\nYou can use it once.\nIf you haven\'t used your gun before the end of the round you die.');
+			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
 		},
 		target: false,
 	},
