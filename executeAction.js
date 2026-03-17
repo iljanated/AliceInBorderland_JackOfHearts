@@ -1,5 +1,6 @@
 const { MessageFlags } = require('discord.js');
 const { modIds } = require('./config.json');
+const { state } = require('./state.js');
 
 
 const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly) => {
