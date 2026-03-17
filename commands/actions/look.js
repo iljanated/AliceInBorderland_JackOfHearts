@@ -13,6 +13,10 @@ const look = async function(interaction) {
 		return ('No cheating!');
 	}
 
+	if (modIds.includes(player.id)) {
+		return ('The GM doesn\'t need this action.');
+	}
+
 	if (modIds.includes(target.id)) {
 		return ('The GM is not a participant in the game.');
 	}
@@ -26,7 +30,7 @@ const look = async function(interaction) {
 	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {
-		return (`<@${target.id}>'s suit is "${targetPlayerState.suit}".`);
+		return ('You are dead.');
 	}
 
 	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
@@ -48,11 +52,11 @@ const look = async function(interaction) {
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
 	if (blurPowerIndex >= 0) {
-		const suit = suits[finalTargetPlayerState.suit].color;
-		return (`<@${target.id}>'s suit is ${suit}.`);
+		const color = suits[finalTargetPlayerState.suit].color;
+		return (`<@${target.id}>'s suit is **${color}**.`);
 	}
 
-	return (`<@${target.id}>'s suit is "${finalTargetPlayerState.suit}".`);
+	return (`<@${target.id}>'s suit is **${finalTargetPlayerState.suit}**.`);
 };
 
 module.exports = {
