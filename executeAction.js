@@ -3,7 +3,7 @@ const { modIds } = require('./config.json');
 const { state } = require('./state.js');
 
 
-const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly) => {
+const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly, livePlayerOnly) => {
 	const channelId = interaction.channel.id;
 
 	let message = undefined;
@@ -16,6 +16,12 @@ const executeAction = async (interaction, actionFunction, isRestricted, inGameOn
 		}
 		if (inGameOnly && state.ended) {
 			throw 'The game is over.';
+		}
+
+		const playerState = state.players.find(p => p.id === interaction.user.id);
+
+		if (livePlayerOnly && !(playerState && playerState.alive)) {
+			throw 'You are not a live player.';
 		}
 
 

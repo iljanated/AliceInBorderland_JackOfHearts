@@ -13,24 +13,12 @@ const enter = async function(interaction) {
 	const choice = interaction.options.getString('door', true).toLowerCase();
 	const guild = interaction.guild;
 
-	if (modIds.includes(player.id)) {
-		return ('GM\'s can\'t enter rooms.');
-	}
-
 	const playerState = state.players.find(p => p.id === player.id);
-
-	if (!playerState.alive) {
-		return ('Dead players can\'t enter rooms.');
-	}
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'immobile');
 
 	if (powerIndex >= 0) {
 		return ('You are immobilized and can\'t leave the room.');
-	}
-
-	if (modIds.includes(player.id)) {
-		return ('GM\'s don\'t leave rooms.');
 	}
 
 	const playerChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id));
@@ -72,6 +60,6 @@ module.exports = {
 		.setDescription('Go to another room.')
 		.addStringOption((option) => option.setName('door').setDescription('The label on the door.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		await executeAction(interaction, enter, false, true);
+		await executeAction(interaction, enter, false, true, true);
 	},
 };

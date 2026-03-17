@@ -12,10 +12,6 @@ const suit = async function(interaction) {
 
 	const playerState = state.players.find(p => p.id === player.id);
 
-	if (!playerState.alive) {
-		return ('Dead players don\'t have to do this.');
-	}
-
 	playerState.suitChoice = choice;
 	await saveState();
 
@@ -28,6 +24,6 @@ module.exports = {
 		.setDescription('Commit your suit.')
 		.addStringOption((option) => option.setName('suit').setDescription('The suit on your collar.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		await executeAction(interaction, suit, false, true);
+		await executeAction(interaction, suit, false, true, true);
 	},
 };

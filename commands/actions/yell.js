@@ -8,15 +8,7 @@ const yell = async function(interaction) {
 	const player = interaction.user;
 	const yellMessage = interaction.options.getString('message', true);
 
-	if (modIds.includes(player.id)) {
-		return ('GM\'s don\'t yell.');
-	}
-
 	const playerState = state.players.find(p => p.id === player.id);
-
-	if (!playerState.alive) {
-		return ('Dead players can\'t yell.');
-	}
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'mute');
 
@@ -39,6 +31,6 @@ module.exports = {
 		.setDescription('Yell something really loudly.')
 		.addStringOption((option) => option.setName('message').setDescription('The message to yell.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, yell, false, true);
+		await executeAction(interaction, yell, false, true, true);
 	},
 };

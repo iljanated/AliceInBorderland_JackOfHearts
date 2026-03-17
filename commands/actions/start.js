@@ -56,6 +56,6 @@ module.exports = {
 		.setName('start')
 		.setDescription('Start the game.'),
 	async execute(interaction) {
-		await executeAction(interaction, start, true, false);
+		await executeAction(interaction, start, true, false, false);
 	},
 };

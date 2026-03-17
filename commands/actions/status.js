@@ -1,9 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
+const { suits, modIds } = require('../../config.json');
 const { executeAction } = require('../../executeAction.js');
 
 const status = async function(interaction) {
 	const player = interaction.user;
+
+	const isMod = modIds.includes(player.id);
 
 	const playerState = state.players.find(p => p.id === player.id);
 
@@ -27,29 +30,34 @@ const status = async function(interaction) {
 	}
 
 	if (submitPlayers.length > 0) {
-		result += '\nThe following players have submitted have submitted a suit:\n';
+		result += '\nThe following players have submitted a suit:\n';
 		for (submitPlayer of submitPlayers) {
-			result += `- ${submitPlayer.name}\n`;
+			if (isMod) {
+				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label} (${suits[submitPlayer.suit].label})\n`;
+			}
+			else {
+				result += `- ${submitPlayer.name}\n`;
+			}
 		}
 	}
 	else {
 		result += '\nNo one has submitted a suit yet.\n';
 	}
 
-	if (playerState.alive) {
+	if (playerState && playerState.alive) {
+		if (playerState.suitChoice) {
+			result += `\nYour currently submitted suit is **${suits[playerState.suitChoice].label}**.\n`;
+		}
+		else {
+			result += '\nYou haven\'t submitted a suit yet.\n';
+		}
+
 		result += playerState.early ? '\nYou want to end early.\n' : '\nYou don\'t want to end early.\n';
 		if (playerState.powers.length > 0) {
 			result += `\nYour remaining powers are:\n- ${playerState.powers.map(p => p.name).join('\n- ')}\n`;
 		}
 		else {
 			result += '\nYou don\'t have any more powers this round.\n';
-		}
-
-		if (playerState.suitChoice) {
-			result += `\nYour currently submitted suit is **${playerState.suitChoice}**.`;
-		}
-		else {
-			result += '\nYou haven\'t submitted a suit yet.';
 		}
 	}
 
@@ -61,6 +69,6 @@ module.exports = {
 		.setName('status')
 		.setDescription('Give the current status of the game.'),
 	async execute(interaction) {
-		await executeAction(interaction, status, false, true);
+		await executeAction(interaction, status, false, false, false);
 	},
 };

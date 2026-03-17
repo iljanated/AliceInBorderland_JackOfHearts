@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
 const { modIds, playChannelNames, suits } = require('../../config.json');
-const { pick } = require('../../utils.js');
+const { pick, colorString } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
 const look = async function(interaction) {
@@ -11,10 +11,6 @@ const look = async function(interaction) {
 
 	if (player.id === target.id) {
 		return ('No cheating!');
-	}
-
-	if (modIds.includes(player.id)) {
-		return ('The GM doesn\'t need this action.');
 	}
 
 	if (modIds.includes(target.id)) {
@@ -28,10 +24,6 @@ const look = async function(interaction) {
 	}
 
 	const playerState = state.players.find(p => p.id === player.id);
-
-	if (!playerState.alive) {
-		return ('You are dead.');
-	}
 
 	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
@@ -52,11 +44,10 @@ const look = async function(interaction) {
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
 	if (blurPowerIndex >= 0) {
-		const color = suits[finalTargetPlayerState.suit].color;
-		return (`<@${target.id}>'s suit is **${color}**.`);
+		return (colorString(`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].colorLabel}**.`));
 	}
 
-	return (`<@${target.id}>'s suit is **${finalTargetPlayerState.suit}**.`);
+	return (`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].label}**.`);
 };
 
 module.exports = {
@@ -65,6 +56,6 @@ module.exports = {
 		.setDescription('Look at the suit on someone else\'s collar.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to check.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, look, false, true);
+		await executeAction(interaction, look, false, true, true);
 	},
 };

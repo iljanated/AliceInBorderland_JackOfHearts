@@ -46,10 +46,15 @@ function formattedTimestamp() {
 	return `${year}_${month}_${day}_${hour}_${minute}_${second}_${ms}`;
 }
 
+function colorString(text) {
+	return '```ansi' + text + '```';
+}
+
 module.exports = {
 	shuffle,
 	pick,
 	scramble,
 	capitalizeOnlyFirst,
-	formattedTimestamp
+	formattedTimestamp,
+	colorString,
 };

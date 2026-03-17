@@ -73,8 +73,8 @@ const endRound = async function(guild) {
 
 	for (playerState of playerStates) {
 		if (playerState.suit !== playerState.suitChoice) {
-			const player = guild.members.cache.find(p => p.user.id === playerState.id).user;
-			await kill(guild, player);
+			const member = await guild.members.fetch(playerState.id);;
+			await kill(guild, member.user, false);
 		}
 	}
 
@@ -87,14 +87,16 @@ const endRound = async function(guild) {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
 					if (!targetState.alive) {
-						await kill(guild, player);
+						const member = await guild.members.fetch(playerState.id);;
+						await kill(guild, member.user, false);
 					}
 				}
 				else if (power.name === 'mutex') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
 					if (targetState.alive) {
-						await kill(guild, player, false);
+						const member = await guild.members.fetch(playerState.id);;
+						await kill(guild, member.user, false);
 					}
 				}
 			}
@@ -148,10 +150,10 @@ Any limitations on communication are not applicable to channel.***`);
 		playerStates[i].powers = [playerPower];
 
 		if (power.name === 'earpiece') {
-			const member = guild.members.cache.find(m => m.user.username === playerState.name);
+			const member = await guild.members.fetch(playerState.id);
 			const player = member.user;
 			await addPlayerToChannel(player, newEarpieceChannel, true, true);
-			const targetMember = guild.members.cache.find(m => m.user.username === playerState.name);
+			const targetMember = await guild.members.fetch(playerPower.target);
 			const targetPlayer = targetMember.user;
 			await addPlayerToChannel(targetPlayer, newEarpieceChannel, true, true);
 		}

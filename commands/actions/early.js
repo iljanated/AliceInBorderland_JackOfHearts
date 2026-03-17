@@ -14,10 +14,6 @@ const early = async function(interaction) {
 
 	const playerState = state.players.find(p => p.id === player.id);
 
-	if (!playerState.alive) {
-		return ('Dead players don\'t have a say in this.');
-	}
-
 	playerState.early = choice === 'yes';
 	await saveState();
 
@@ -35,6 +31,6 @@ module.exports = {
 		.setDescription('End early or not.')
 		.addStringOption((option) => option.setName('choice').setDescription('Yes or No.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		await executeAction(interaction, early, false, true);
+		await executeAction(interaction, early, false, true, true);
 	},
 };

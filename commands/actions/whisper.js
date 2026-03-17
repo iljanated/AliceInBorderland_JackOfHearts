@@ -10,15 +10,7 @@ const whisper = async function (interaction) {
 	const target = interaction.options.getUser('target', true);
 	const whisperMessage = interaction.options.getString('message', true);
 
-	if (modIds.includes(player.id)) {
-		return ('GM\'s don\'t whisper.');
-	}
-
 	const playerState = state.players.find(p => p.id === player.id);
-
-	if (!playerState.alive) {
-		return ('Dead players can\'t whisper.');
-	}
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'amplify');
 
@@ -68,6 +60,6 @@ module.exports = {
 		.addUserOption((option) => option.setName('target').setDescription('The player to whisper to.').setRequired(true))
 		.addStringOption((option) => option.setName('message').setDescription('The message to whisper.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, whisper, false, true);
+		await executeAction(interaction, whisper, false, true, true);
 	},
 };
