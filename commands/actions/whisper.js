@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { modIds, playChannelNames, playerChannelPrefix } = require('../../config.json');
 const { state } = require('../../state.js');
-const { scramble } = require('../../utils');
+const { scramble } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
 const whisper = async function (interaction) {

@@ -12,7 +12,7 @@ const end = async function(interaction) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('start')
+		.setName('end')
 		.setDescription('Start the game.'),
 	async execute(interaction) {
 		await executeAction(interaction, end, true);
