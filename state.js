@@ -8,7 +8,7 @@ const saveState = async function() {
 	await fsp.writeFile(path, JSON.stringify(state, null, 2));
 
 	const backupPath = `./backups/state_${formattedTimestamp()}.json`;
-	await fsp.writeFile(backupPath, JSON.stringify(state));
+	await fsp.writeFile(backupPath, JSON.stringify(state, null, 2));
 };
 
 const clearState = async function() {
