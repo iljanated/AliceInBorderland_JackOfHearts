@@ -7,7 +7,7 @@ const state = JSON.parse(fs.readFileSync(path));
 const saveState = async function() {
 	await fsp.writeFile(path, JSON.stringify(state, null, 2));
 
-	const backupPath = `./backup/state_${formattedTimestamp()}.json`;
+	const backupPath = `./backups/state_${formattedTimestamp()}.json`;
 	await fsp.writeFile(backupPath, JSON.stringify(state));
 };
 
