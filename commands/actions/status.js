@@ -36,9 +36,9 @@ const status = async function(interaction) {
 
 		for (submitPlayer of submitPlayers) {
 			if (telepath) {
-				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label}\n`;
+				result += `- ${submitPlayer.name}: **${suits[submitPlayer.suitChoice].label}**\n`;
 			} else if (!alive) {
-				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label} (Collar: ${suits[submitPlayer.suit].label})\n`;
+				result += `- ${submitPlayer.name}: **${suits[submitPlayer.suitChoice].label}** (Collar: **${suits[submitPlayer.suit].label})**\n`;
 			}
 			else {
 				result += `- ${submitPlayer.name}\n`;

@@ -9,6 +9,7 @@ const choices = [
 ];
 
 const early = async function(interaction) {
+	const guild = interaction.guild;
 	const player = interaction.user;
 	const choice = interaction.options.getString('choice', true).toLowerCase();
 

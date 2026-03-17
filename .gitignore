@@ -145,3 +145,5 @@ vite.config.ts.timestamp-*
 
 config.json
 state.json
+
+backups/**/*.json

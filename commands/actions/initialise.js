@@ -112,7 +112,7 @@ Setting this up was a lot of work so:
 	const rulesSent = await rulesChannel.send({ embeds: [rulesEmbed] });
 	await rulesSent.pin();
 
-	await createChannel(guild, deadChannelName, false, false);
+	await createChannel(guild, deadChannelName, true, false);
 
 	await createChannel(guild, earpieceChannelName, true, true);
 

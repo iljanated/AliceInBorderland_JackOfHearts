@@ -34,22 +34,19 @@ const refreshCell = async function(guild, channelName) {
 };
 
 const kill = async function(guild, player, gameShouldEnd = true) {
+	const playerState = state.players.find(p => p.id === player.id);
+	playerState.alive = false;
+	await saveState();
+
 	const channels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 
-	const playerState = state.players.find(s => s.name === player.username);
-
 	for ([id, channel] of channels) {
-		await removePlayerFromChannel(player, channel);
+		if (channel.members.find(m => m.user.id === player.id)) {
+			await removePlayerFromChannel(player, channel);
 
-		const channelId = channel.id;
-
-		if (channel.name !== centralChannelName) {
-			await refreshCell(guild, channel.name);
-		}
-
-		if (guild.channels.cache.find(c => c.id === channelId)) {
-			const sent = await channel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
-			await sent.pin();
+			if (channel.name !== centralChannelName) {
+				await refreshCell(guild, channel.name);
+			}
 		}
 	}
 
@@ -60,8 +57,10 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	const deadChannel = guild.channels.cache.find(c => c.name === deadChannelName);
 	await addPlayerToChannel(player, deadChannel, true);
 
-	playerState.alive = false;
-	await saveState();
+	const corridorChannel = guild.channels.cache.find(c => c.name === centralChannelName);
+
+	const sent = await corridorChannel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
+	await sent.pin();
 
 	if (state.players.filter(p => p.alive) <= 1 && gameShouldEnd) {
 		await endGame(guild);
@@ -112,6 +111,8 @@ const endRound = async function(guild) {
 };
 
 const startRound = async function(guild) {
+	state.round++;
+
 	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
 	const newEarpieceChannel = await earpieceChannel.clone();
 	await newEarpieceChannel.setPosition(earpieceChannel.position);
@@ -126,7 +127,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	await sent.pin();
 
 	const playerStates = state.players.filter(p => p.alive);
-	const shuffledPowers = [...Object.values(powers)];
+	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
 	for (let i = 0; i < playerStates.length; i++) {
 		const playerState = playerStates[i];
@@ -160,7 +161,6 @@ Any limitations on communication are not applicable to this channel.***`);
 			await earpieceSent.pin();
 		}
 	}
-	state.round++;
 	await saveState();
 
 	const playChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
@@ -206,6 +206,14 @@ Any limitations on communication are not applicable to this channel.***`);
 
 		const privateSent = await playerChannel.send({ embeds: [privateEmbed] });
 		await privateSent.pin();
+
+	}
+	if (state.round > 1) {
+		const roundStartedSent = await corridorChannel.send(
+			`**Round ${state.round}**
+There are ${playerStates.length} players left.
+Good luck!`);
+		await roundStartedSent.pin();
 	}
 };
 
