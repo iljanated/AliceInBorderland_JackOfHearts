@@ -1,3 +1,5 @@
+const { suits } = require('./config.json');
+
 const powers = {
 	shoot: {
 		name: 'shoot',
@@ -37,7 +39,7 @@ const powers = {
 	reveal: {
 		name: 'reveal',
 		description: playerState => {
-			return (`The suit on your collar for this round is ${playerState.suit}.`);
+			return (`The suit on your collar for this round is **${suits[playerState.suit].label}**.`);
 		},
 		target: false,
 	},

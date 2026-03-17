@@ -122,7 +122,7 @@ const startRound = async function(guild) {
 You are now member of an exclusive private chat.
 The chat ends at the end of the round.
 All chat history will be removed at the end of the round.
-Any limitations on communication are not applicable to channel.***`);
+Any limitations on communication are not applicable to this channel.***`);
 	await sent.pin();
 
 	const playerStates = state.players.filter(p => p.alive);
@@ -156,6 +156,8 @@ Any limitations on communication are not applicable to channel.***`);
 			const targetMember = await guild.members.fetch(playerPower.target);
 			const targetPlayer = targetMember.user;
 			await addPlayerToChannel(targetPlayer, newEarpieceChannel, true, true);
+			const earpieceSent = await newEarpieceChannel.send(`***<@${player.id}> and <@${targetPlayer.id}> entered the chat.***`);
+			await earpieceSent.pin();
 		}
 	}
 	state.round++;
