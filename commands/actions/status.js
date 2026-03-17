@@ -5,13 +5,6 @@ const { executeAction } = require('../../executeAction.js');
 const status = async function(interaction) {
 	const player = interaction.user;
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	const playerState = state.players.find(p => p.id === player.id);
 
 	const alivePlayers = state.players.filter(p => p.alive);
@@ -44,6 +37,6 @@ module.exports = {
 		.setName('status')
 		.setDescription('Give the current status of the game.'),
 	async execute(interaction) {
-		await executeAction(interaction, status, false);
+		await executeAction(interaction, status, false, true);
 	},
 };

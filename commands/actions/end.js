@@ -15,6 +15,6 @@ module.exports = {
 		.setName('end')
 		.setDescription('Start the game.'),
 	async execute(interaction) {
-		await executeAction(interaction, end, true);
+		await executeAction(interaction, end, true, true);
 	},
 };

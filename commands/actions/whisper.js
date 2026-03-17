@@ -10,13 +10,6 @@ const whisper = async function (interaction) {
 	const target = interaction.options.getUser('target', true);
 	const whisperMessage = interaction.options.getString('message', true);
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	if (modIds.includes(player.id)) {
 		return ('GM\'s don\'t whisper.');
 	}
@@ -75,6 +68,6 @@ module.exports = {
 		.addUserOption((option) => option.setName('target').setDescription('The player to whisper to.').setRequired(true))
 		.addStringOption((option) => option.setName('message').setDescription('The message to whisper.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, whisper, false);
+		await executeAction(interaction, whisper, false, true);
 	},
 };

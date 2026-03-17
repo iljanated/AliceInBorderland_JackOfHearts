@@ -9,14 +9,6 @@ const shoot = async function(interaction) {
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
-
 	if (modIds.includes(player.id)) {
 		return ('The GM doesn\'t shoot players.');
 	}
@@ -71,6 +63,6 @@ module.exports = {
 		.setDescription('Shoot and see what happens.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to shoot.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, shoot, false);
+		await executeAction(interaction, shoot, false, true);
 	},
 };

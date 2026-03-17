@@ -2,7 +2,7 @@ const { MessageFlags } = require('discord.js');
 const { modIds } = require('./config.json');
 
 
-const executeAction = async (interaction, actionFunction, isRestricted) => {
+const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly) => {
 	const channelId = interaction.channel.id;
 
 	let message = undefined;
@@ -10,11 +10,19 @@ const executeAction = async (interaction, actionFunction, isRestricted) => {
 	try {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		if (restricted && !modIds.includes(interaction.user.id)) {
+		if (inGameOnly && !state.started) {
+			throw 'The game hasn\'t started yet.';
+		}
+		if (inGameOnly && state.ended) {
+			throw 'The game is over.';
+		}
+
+
+		if (isRestricted && !modIds.includes(interaction.user.id)) {
 			throw 'access denied';
 		}
 
-		message = await actionfunction(interaction);
+		message = await actionFunction(interaction);
 	}
 	catch (error) {
 		console.error(error);

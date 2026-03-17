@@ -13,13 +13,6 @@ const enter = async function(interaction) {
 	const choice = interaction.options.getString('door', true).toLowerCase();
 	const guild = interaction.guild;
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	if (modIds.includes(player.id)) {
 		return ('GM\'s can\'t enter rooms.');
 	}
@@ -79,6 +72,6 @@ module.exports = {
 		.setDescription('Go to another room.')
 		.addStringOption((option) => option.setName('door').setDescription('The label on the door.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		await executeAction(interaction, enter, false);
+		await executeAction(interaction, enter, false, true);
 	},
 };

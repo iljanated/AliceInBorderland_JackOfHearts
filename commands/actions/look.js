@@ -9,13 +9,6 @@ const look = async function(interaction) {
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	if (player.id === target.id) {
 		return ('No cheating!');
 	}
@@ -68,6 +61,6 @@ module.exports = {
 		.setDescription('Look at the suit on someone else\'s collar.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to check.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, look, false);
+		await executeAction(interaction, look, false, true);
 	},
 };

@@ -10,13 +10,6 @@ const suit = async function(interaction) {
 	const player = interaction.user;
 	const choice = interaction.options.getString('suit', true).toLowerCase();
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	const playerState = state.players.find(p => p.id === player.id);
 
 	if (!playerState.alive) {
@@ -35,6 +28,6 @@ module.exports = {
 		.setDescription('Commit your suit.')
 		.addStringOption((option) => option.setName('suit').setDescription('The suit on your collar.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		await executeAction(interaction, suit, false);
+		await executeAction(interaction, suit, false, true);
 	},
 };

@@ -8,13 +8,6 @@ const yell = async function(interaction) {
 	const player = interaction.user;
 	const yellMessage = interaction.options.getString('message', true);
 
-	if (!state.started) {
-		return ('The game hasn\'t started yet.');
-	}
-	if (state.ended) {
-		return ('The game is over.');
-	}
-
 	if (modIds.includes(player.id)) {
 		return ('GM\'s don\'t yell.');
 	}
@@ -46,6 +39,6 @@ module.exports = {
 		.setDescription('Yell something really loudly.')
 		.addStringOption((option) => option.setName('message').setDescription('The message to yell.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, yell, false);
+		await executeAction(interaction, yell, false, true);
 	},
 };

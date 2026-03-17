@@ -137,6 +137,6 @@ module.exports = {
 		.setName('initialise')
 		.setDescription('Reset the server.'),
 	async execute(interaction) {
-		await executeAction(interaction, initialise, true);
+		await executeAction(interaction, initialise, true, false);
 	},
 };
