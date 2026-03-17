@@ -1,9 +1,11 @@
-const { SlashCommandBuilder, MessageFlags, EmbedBuilder, AttachmentBuilder } = require('discord.js');
-const { modIds, generalChannelNames, playChannelNames, deadChannelName, introImages, generalChannelName } = require('../../config.json');
+const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { generalChannelNames, playChannelNames, deadChannelName, introImages, generalChannelName, earpieceChannelName } = require('../../config.json');
 const { clearState } = require('../../state.js');
 const { createChannel, createPublicChannel } = require('../../channel.js');
+const { executeAction } = require('../../executeAction.js');
 
-const initialise = async function(guild) {
+const initialise = async function(interaction) {
+	const guild = interaction.guild;
 	await clearState();
 
 	const channels = await guild.channels.fetch();
@@ -111,6 +113,9 @@ Setting this up was a lot of work so:
 	await rulesSent.pin();
 
 	await createChannel(guild, deadChannelName, false, false);
+
+	await createChannel(guild, earpieceChannelName, true, true);
+
 	for (channelName of playChannelNames) {
 		await createChannel(guild, channelName, true, true);
 	}
@@ -132,24 +137,6 @@ module.exports = {
 		.setName('initialise')
 		.setDescription('Reset the server.'),
 	async execute(interaction) {
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			if (!modIds.includes(interaction.user.id)) {
-				throw 'access denied';
-			}
-
-			const message = await initialise(interaction.guild);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, initialise, true);
 	},
 };

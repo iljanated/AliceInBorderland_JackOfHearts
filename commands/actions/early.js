@@ -1,13 +1,17 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
 const { endRound } = require('../../game.js');
+const { executeAction } = require('../../executeAction.js');
 
 const choices = [
 	{ name: 'Yes', value: 'yes' },
 	{ name: 'No', value: 'no' },
 ];
 
-const early = async function(guild, player, choice) {
+const early = async function(interaction) {
+	const player = interaction.user;
+	const choice = interaction.options.getString('choice', true).toLowerCase();
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -38,23 +42,6 @@ module.exports = {
 		.setDescription('End early or not.')
 		.addStringOption((option) => option.setName('choice').setDescription('Yes or No.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const choice = interaction.options.getString('choice', true).toLowerCase();
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await early(interaction.guild, player, choice);
-
-			if (message) {
-				await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral });
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply({ content: `There was an error:\n\`${error}\``, flags: MessageFlags.Ephemeral });
-		}
+		await executeAction(interaction, early, false);
 	},
 };

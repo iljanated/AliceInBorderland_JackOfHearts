@@ -1,10 +1,13 @@
-const { SlashCommandBuilder, MessageFlags, AttachmentBuilder } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { modIds, playerChannelPrefix, startImages, centralChannelName } = require('../../config.json');
 const { startRound } = require('../../game.js');
 const { state, saveState } = require('../../state.js');
 const { addPlayerToChannel, createChannel } = require('../../channel.js');
+const { executeAction } = require('../../executeAction.js');
 
-const start = async function(guild) {
+const start = async function(interaction) {
+	const guild = interaction.guild;
+
 	const members = await guild.members.fetch();
 
 	const players = [];
@@ -53,24 +56,6 @@ module.exports = {
 		.setName('start')
 		.setDescription('Start the game.'),
 	async execute(interaction) {
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			if (!modIds.includes(interaction.user.id)) {
-				throw 'access denied';
-			}
-
-			const message = await start(interaction.guild);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, start, true);
 	},
 };

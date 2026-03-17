@@ -1,8 +1,10 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
+const { executeAction } = require('../../executeAction.js');
 
+const status = async function(interaction) {
+	const player = interaction.user;
 
-const status = async function(guild, player) {
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -42,22 +44,6 @@ module.exports = {
 		.setName('status')
 		.setDescription('Give the current status of the game.'),
 	async execute(interaction) {
-		const player = interaction.user;
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await status(interaction.guild, player);
-
-			if (message) {
-				await interaction.editReply({ content: message, flags: MessageFlags.Ephemeral });
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply({ content: `There was an error:\n\`${error}\``, flags: MessageFlags.Ephemeral });
-		}
+		await executeAction(interaction, status, false);
 	},
 };

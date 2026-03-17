@@ -1,13 +1,18 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { modIds, playChannelNames, centralChannelName } = require('../../config.json');
 const { state } = require('../../state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('../../channel.js');
 const { refreshCell } = require('../../game.js');
 const { capitalizeOnlyFirst } = require('../../utils.js');
+const { executeAction } = require('../../executeAction.js');
 
 const choices = playChannelNames.map(c => { return ({ name: capitalizeOnlyFirst(c), value: c }); });
 
-const enter = async function(guild, player, choice) {
+const enter = async function(interaction) {
+	const player = interaction.user;
+	const choice = interaction.options.getString('door', true).toLowerCase();
+	const guild = interaction.guild;
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -74,31 +79,6 @@ module.exports = {
 		.setDescription('Go to another room.')
 		.addStringOption((option) => option.setName('door').setDescription('The label on the door.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const door = interaction.options.getString('door', true).toLowerCase();
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const channelId = interaction.channel.id;
-
-			const message = await enter(interaction.guild, player, door);
-
-			const oldChannel = interaction.guild.channels.cache.find(c => c.id === channelId);
-
-			if (oldChannel) {
-				if (message) {
-					await interaction.editReply(message);
-				}
-				else {
-					await interaction.deleteReply();
-				}
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, enter, false);
 	},
 };

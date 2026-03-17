@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const { modIds, playChannelNames, centralChannelName, deadChannelName, suits } = require('./config.json');
+const { modIds, playChannelNames, centralChannelName, deadChannelName, suits, earpieceChannelName } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
@@ -24,7 +24,7 @@ const refreshCell = async function(guild, channelName) {
 		{ name: 'Doors', value: `There is only one door.\nIt is marked ${centralChannelName}.` },
 	);
 	embed.addFields(
-		{ name: 'History', value: `When the last player leaves ${channelName}, the channel is reset and all chathistory is gone forever.` },
+		{ name: 'History', value: `When the last player leaves ${channelName}, the channel is reset and all chat history is gone forever.` },
 	);
 
 	const sent = await newChannel.send({ embeds: [embed] });
@@ -41,13 +41,21 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	for ([id, channel] of channels) {
 		await removePlayerFromChannel(player, channel);
 
+		const channelId = channel.id;
+
 		if (channel.name !== centralChannelName) {
 			await refreshCell(guild, channel.name);
 		}
 
-		const sent = await channel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
-		await sent.pin();
+		if (guild.channels.cache.find(c => c.id === channelId)) {
+			const sent = await channel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
+			await sent.pin();
+		}
 	}
+
+	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
+	await removePlayerFromChannel(player, earpieceChannel);
+
 
 	const deadChannel = guild.channels.cache.find(c => c.name === deadChannelName);
 	await addPlayerToChannel(player, deadChannel, true);
@@ -102,6 +110,19 @@ const endRound = async function(guild) {
 };
 
 const startRound = async function(guild) {
+	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
+	const newEarpieceChannel = await earpieceChannel.clone();
+	await newEarpieceChannel.setPosition(earpieceChannel.position);
+	await earpieceChannel.delete();
+
+	const sent = await newEarpieceChannel.send(
+		`***The microphone in your collar is activated.
+You are now member of an exclusive private chat.
+The chat ends at the end of the round.
+All chat history will be removed at the end of the round.
+Any limitations on communication are not applicable in this channel.***`);
+	await sent.pin();
+
 	const playerStates = state.players.filter(p => p.alive);
 	const shuffledPowers = [...Object.values(powers)];
 	shuffle(shuffledPowers);
@@ -118,13 +139,22 @@ const startRound = async function(guild) {
 			while (target === playerState.id) {
 				target = pick(playerStates).id;
 			}
- 		}
+		}
 
 		const playerPower = {
 			name: power.name,
 			target: target,
 		};
 		playerStates[i].powers = [playerPower];
+
+		if (power.name === 'earpice') {
+			const member = guild.members.cache.find(m => m.user.username === playerState.name);
+			const player = member.user;
+			await addPlayerToChannel(player, newEarpieceChannel, true, true);
+			const targetMember = guild.members.cache.find(m => m.user.username === playerState.name);
+			const targetPlayer = targetMember.user;
+			await addPlayerToChannel(targetPlayer, newEarpieceChannel, true, true);
+		}
 	}
 	state.round++;
 	await saveState();
@@ -170,8 +200,8 @@ const startRound = async function(guild) {
 			);
 		}
 
-		const sent = await playerChannel.send({ embeds: [privateEmbed] });
-		await sent.pin();
+		const privateSent = await playerChannel.send({ embeds: [privateEmbed] });
+		await privateSent.pin();
 	}
 };
 

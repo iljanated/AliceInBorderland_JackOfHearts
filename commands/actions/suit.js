@@ -1,11 +1,15 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
 const { suits } = require('../../config.json');
 const { capitalizeOnlyFirst } = require('../../utils.js');
+const { executeAction } = require('../../executeAction.js');
 
 const choices = Object.values(suits).map(s => { return ({ name: capitalizeOnlyFirst(s.name), value: s.name }); });
 
-const suit = async function(guild, player, choice) {
+const suit = async function(interaction) {
+	const player = interaction.user;
+	const choice = interaction.options.getString('suit', true).toLowerCase();
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -31,25 +35,6 @@ module.exports = {
 		.setDescription('Commit your suit.')
 		.addStringOption((option) => option.setName('suit').setDescription('The suit on your collar.').setRequired(true).setChoices(choices)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const choice = interaction.options.getString('suit', true).toLowerCase();
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await suit(interaction.guild, player, choice);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, suit, false);
 	},
 };

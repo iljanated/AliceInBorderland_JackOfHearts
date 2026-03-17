@@ -1,9 +1,14 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
 const { modIds, playChannelNames } = require('../../config.json');
 const { kill } = require('../../game.js');
+const { executeAction } = require('../../executeAction.js');
 
-const shoot = async function(guild, player, target) {
+const shoot = async function(interaction) {
+	const guild = interaction.guild;
+	const player = interaction.user;
+	const target = interaction.options.getUser('target', true);
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -66,23 +71,6 @@ module.exports = {
 		.setDescription('Shoot and see what happens.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to shoot.').setRequired(true)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const target = interaction.options.getUser('target', true);
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await shoot(interaction.guild, player, target);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(`There was an error:\n\`${error}\``);
-		}
+		await executeAction(interaction, shoot, false);
 	},
 };

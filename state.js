@@ -1,11 +1,14 @@
 const fs = require('fs');
 const fsp = require('fs/promises');
+const { formattedTimestamp } = require('./utils.js');
 const path = './state.json';
-
 const state = JSON.parse(fs.readFileSync(path));
 
 const saveState = async function() {
 	await fsp.writeFile(path, JSON.stringify(state));
+
+	const backupPath = `./backup/state_${formattedTimestamp()}.log`;
+	await fsp.writeFile(backupPath, JSON.stringify(state));
 };
 
 const clearState = async function() {

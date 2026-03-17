@@ -1,9 +1,14 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
 const { modIds, playChannelNames, suits } = require('../../config.json');
 const { pick } = require('../../utils.js');
+const { executeAction } = require('../../executeAction.js');
 
-const look = async function(guild, player, target) {
+const look = async function(interaction) {
+	const guild = interaction.guild;
+	const player = interaction.user;
+	const target = interaction.options.getUser('target', true);
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -63,25 +68,6 @@ module.exports = {
 		.setDescription('Look at the suit on someone else\'s collar.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to check.').setRequired(true)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const target = interaction.options.getUser('target', true);
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await look(interaction.guild, player, target);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, look, false);
 	},
 };

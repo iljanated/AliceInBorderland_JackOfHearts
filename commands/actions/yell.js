@@ -1,8 +1,13 @@
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { modIds, playChannelNames } = require('../../config.json');
 const { state } = require('../../state.js');
+const { executeAction } = require('../../executeAction.js');
 
-const yell = async function(guild, player, yellMessage) {
+const yell = async function(interaction) {
+	const guild = interaction.guild;
+	const player = interaction.user;
+	const yellMessage = interaction.options.getString('message', true);
+
 	if (!state.started) {
 		return ('The game hasn\'t started yet.');
 	}
@@ -41,25 +46,6 @@ module.exports = {
 		.setDescription('Yell something really loudly.')
 		.addStringOption((option) => option.setName('message').setDescription('The message to yell.').setRequired(true)),
 	async execute(interaction) {
-		const player = interaction.user;
-		const yellMessage = interaction.options.getString('message', true);
-		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
-			const message = await yell(interaction.guild, player, yellMessage);
-
-			if (message) {
-				await interaction.editReply(message);
-			}
-			else {
-				await interaction.deleteReply();
-			}
-		}
-		catch (error) {
-			console.error(error);
-			await interaction.editReply(
-				`There was an error:\n\`${error}\``,
-			);
-		}
+		await executeAction(interaction, yell, false);
 	},
 };
