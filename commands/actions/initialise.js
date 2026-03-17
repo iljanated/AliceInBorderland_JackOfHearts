@@ -130,6 +130,8 @@ Setting this up was a lot of work so:
 		});
 		await hallwaySent.pin();
 	}
+
+	return ('Game initialised.');
 };
 
 module.exports = {

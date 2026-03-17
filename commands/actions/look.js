@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
 const { modIds, playChannelNames, suits } = require('../../config.json');
-const { pick, colorString } = require('../../utils.js');
+const { pick } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
 const look = async function(interaction) {
@@ -25,6 +25,10 @@ const look = async function(interaction) {
 
 	const playerState = state.players.find(p => p.id === player.id);
 
+	if (!(playerState && playerState.alive)) {
+		return (`<@${target.id}>'s suit is **${suits[targetPlayerState.suit].label}**.`);
+	}
+
 	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
 
 	if (!shareChannel) {
@@ -44,7 +48,7 @@ const look = async function(interaction) {
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
 	if (blurPowerIndex >= 0) {
-		return (colorString(`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].colorLabel}**.`));
+		return (`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].colorLabel}**.`);
 	}
 
 	return (`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].label}**.`);
@@ -56,6 +60,6 @@ module.exports = {
 		.setDescription('Look at the suit on someone else\'s collar.')
 		.addUserOption((option) => option.setName('target').setDescription('The player to check.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, look, false, true, true);
+		await executeAction(interaction, look, false, true, false);
 	},
 };

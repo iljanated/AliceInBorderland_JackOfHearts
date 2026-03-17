@@ -1,14 +1,14 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state } = require('../../state.js');
-const { suits, modIds } = require('../../config.json');
+const { suits } = require('../../config.json');
 const { executeAction } = require('../../executeAction.js');
 
 const status = async function(interaction) {
 	const player = interaction.user;
 
-	const isMod = modIds.includes(player.id);
-
 	const playerState = state.players.find(p => p.id === player.id);
+
+	const alive = playerState && playerState.alive;
 
 	const alivePlayers = state.players.filter(p => p.alive).sort((a, b) => a.name.localeCompare(b.name));
 	const earlyPlayers = alivePlayers.filter(p => p.early).sort((a, b) => a.name.localeCompare(b.name));
@@ -31,9 +31,14 @@ const status = async function(interaction) {
 
 	if (submitPlayers.length > 0) {
 		result += '\nThe following players have submitted a suit:\n';
+
+		const telepath = alive && playerState.powers.find(p => p.name === 'telepath');
+
 		for (submitPlayer of submitPlayers) {
-			if (isMod) {
-				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label} (${suits[submitPlayer.suit].label})\n`;
+			if (telepath) {
+				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label}\n`;
+			} else if (!alive) {
+				result += `- ${submitPlayer.name}: ${suits[submitPlayer.suitChoice].label} (Collar: ${suits[submitPlayer.suit].label})\n`;
 			}
 			else {
 				result += `- ${submitPlayer.name}\n`;
@@ -44,7 +49,7 @@ const status = async function(interaction) {
 		result += '\nNo one has submitted a suit yet.\n';
 	}
 
-	if (playerState && playerState.alive) {
+	if (alive) {
 		if (playerState.suitChoice) {
 			result += `\nYour currently submitted suit is **${suits[playerState.suitChoice].label}**.\n`;
 		}

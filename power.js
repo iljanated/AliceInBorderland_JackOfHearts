@@ -22,10 +22,17 @@ const powers = {
 		},
 		target: false,
 	},
+	telepath: {
+		name: 'telepath',
+		description: () => {
+			return ('You can read other people\'s thoughts.\nWhen you use the command **/status**, you can see the suits other people have submitted.\nThe effect dissipates at the end of the round.');
+		},
+		target: false,
+	},
 	amplify: {
 		name: 'amplify',
 		description: () => {
-			return ('A megaphone protrudes from your collar.\nYou can only use the command "/yell" to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
+			return ('A megaphone protrudes from your collar.\nYou can only use the command **/yell** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 	},
@@ -70,7 +77,7 @@ const powers = {
 	anonymous: {
 		name: 'anonymous',
 		description: () => {
-			return ('When using the command "/whisper", instead of whispering, you send an anonymous message to a player\'s private channel.\nThe effect dissipates at the end of the round.');
+			return ('When using the command **/whisper**, instead of whispering, you send an anonymous message to a player\'s private channel.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 	},
@@ -84,7 +91,7 @@ const powers = {
 	mute: {
 		name: 'mute',
 		description: () => {
-			return ('You are muted.\nYou can only use the command "/whisper" to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
+			return ('You are muted.\nYou can only use the command **/whisper** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 	},

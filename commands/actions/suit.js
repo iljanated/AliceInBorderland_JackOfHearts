@@ -1,10 +1,9 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
 const { suits } = require('../../config.json');
-const { capitalizeOnlyFirst } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
-const choices = Object.values(suits).map(s => { return ({ name: capitalizeOnlyFirst(s.name), value: s.name }); });
+const choices = Object.values(suits).map(s => { return ({ name: s.label, value: s.name }); });
 
 const suit = async function(interaction) {
 	const player = interaction.user;

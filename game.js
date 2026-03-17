@@ -181,7 +181,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	const corridorChannel = guild.channels.cache.find(c => c.name === centralChannelName);
 
 	for (playerState of playerStates) {
-		const member = guild.members.cache.find(m => m.user.username === playerState.name);
+		const member = await guild.members.fetch(playerState.id);
 		const player = member.user;
 
 		const powerIndex = playerState.powers.findIndex(p => p.name === 'mute' || p.name === 'amplify');
