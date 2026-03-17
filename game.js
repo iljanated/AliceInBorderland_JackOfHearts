@@ -167,6 +167,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	for ([id, channel] of playChannels) {
 		for ([id, member] of channel.members) {
 			if (!modIds.includes(member.user.id)) {
+				const a = member;
 				await removePlayerFromChannel(member.user, channel);
 			}
 		}
