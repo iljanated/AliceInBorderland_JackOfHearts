@@ -19,7 +19,9 @@ const early = async function(interaction) {
 	await saveState();
 
 	if (state.players.filter(p => p.alive).length === state.players.filter(p => p.alive && p.early).length) {
+		state.busy = true;
 		await endRound(guild);
+		state.busy = false;
 	}
 	else {
 		return ('Your preference has been noted.');

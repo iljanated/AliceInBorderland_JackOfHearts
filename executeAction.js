@@ -6,6 +6,10 @@ const { state } = require('./state.js');
 const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly, livePlayerOnly) => {
 	const channelId = interaction.channel.id;
 
+	if(state.busy) {
+		throw 'The gamestate is being updated, please try again in 15 seconds.';
+	}
+
 	let message = undefined;
 
 	try {

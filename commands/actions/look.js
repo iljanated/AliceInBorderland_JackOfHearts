@@ -43,7 +43,7 @@ const look = async function(interaction) {
 
 	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
 
-	const finalTargetPlayerState = randomPowerIndex < 0 ? targetPlayerState : pick(state.players);
+	const finalTargetPlayerState = randomPowerIndex < 0 ? targetPlayerState : pick(state.players.filter(p => p.alive));
 
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 

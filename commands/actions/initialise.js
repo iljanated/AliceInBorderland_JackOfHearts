@@ -5,6 +5,8 @@ const { createChannel, createPublicChannel } = require('../../channel.js');
 const { executeAction } = require('../../executeAction.js');
 
 const initialise = async function(interaction) {
+	state.busy = true;
+
 	const guild = interaction.guild;
 	await clearState();
 
@@ -68,7 +70,9 @@ There are 2 helper commands available:
 
 All other commands are off limits and considered cheating!
 
-Commands will only work once the game has started.`,
+Commands will only work once the game has started.
+
+Commands are suspended while the the gamestate is being updated.`,
 		},
 		{
 			name: 'Channels',
@@ -130,6 +134,15 @@ Setting this up was a lot of work so:
 		});
 		await hallwaySent.pin();
 	}
+
+	// remove all members from dead role
+	const deadRole = guild.roles.cache.find(r => r.name === 'dead');
+
+	for ([id, member] of deadRole.members) {
+		await member.roles.remove(deadRole);
+	}
+
+	state.busy = false;
 
 	return ('Game initialised.');
 };

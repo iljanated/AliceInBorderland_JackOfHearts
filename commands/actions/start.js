@@ -6,9 +6,11 @@ const { addPlayerToChannel, createChannel } = require('../../channel.js');
 const { executeAction } = require('../../executeAction.js');
 
 const start = async function(interaction) {
+	state.busy = true;
+
 	const guild = interaction.guild;
 
-	const members = await guild.members.fetch();
+	const members = await guild.members.cache;
 
 	const players = [];
 
@@ -47,6 +49,8 @@ const start = async function(interaction) {
 	}
 
 	await startRound(guild);
+
+	state.busy = false;
 
 	return 'Game started.';
 };

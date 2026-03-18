@@ -33,8 +33,7 @@ const createChannel = async function(guild, name, allowCommands, addDead) {
 	}
 
 	if (addDead) {
-		const roles = await guild.roles.fetch();
-		const role = roles.find(r => r.name === 'dead');
+		const role = guild.roles.cache.find(r => r.name === 'dead');
 
 		permissionOverwrites.push(
 			{
@@ -63,10 +62,11 @@ const addPlayerToChannel = async function(player, channel, history = true, send 
 };
 
 const removePlayerFromChannel = async function(player, channel) {
-	await channel.permissionOverwrites.create(player.id, {
-		ViewChannel: false,
-		SendMessages: false,
-	});
+	await channel.permissionOverwrites.delete(player.id);
+	// await channel.permissionOverwrites.create(player.id, {
+	//	ViewChannel: false,
+	//	SendMessages: false,
+	// });
 };
 
 module.exports = {

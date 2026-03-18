@@ -20,6 +20,7 @@ const clearState = async function() {
 		state.round = 0;
 		state.started = false;
 		state.ended = false;
+		state.busy = false;
 	}
 	await saveState();
 };

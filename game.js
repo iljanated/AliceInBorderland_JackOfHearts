@@ -57,12 +57,16 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	const deadChannel = guild.channels.cache.find(c => c.name === deadChannelName);
 	await addPlayerToChannel(player, deadChannel, true);
 
+	const deadRole = guild.roles.cache.find(r => r.name === 'dead');
+	const member = await guild.members.fetch(player.id);
+	await member.roles.add(deadRole);
+
 	const corridorChannel = guild.channels.cache.find(c => c.name === centralChannelName);
 
 	const sent = await corridorChannel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
 	await sent.pin();
 
-	if (state.players.filter(p => p.alive) <= 1 && gameShouldEnd) {
+	if (state.players.filter(p => p.alive).length <= 1 && gameShouldEnd) {
 		await endGame(guild);
 	}
 };
@@ -82,11 +86,15 @@ const endRound = async function(guild) {
 	for (power of powersArray) {
 		for (playerState of playerStates) {
 			if (playerState.alive && playerState.powers.find(p => p.name === power.name)) {
-				if (power.name === 'link') {
+				if (power.name === 'shoot') {
+					const member = await guild.members.fetch(playerState.id);
+					await kill(guild, member.user, false);
+				}
+				else if (power.name === 'link') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
 					if (!targetState.alive) {
-						const member = await guild.members.fetch(playerState.id);;
+						const member = await guild.members.fetch(playerState.id);
 						await kill(guild, member.user, false);
 					}
 				}
@@ -102,11 +110,11 @@ const endRound = async function(guild) {
 		}
 	}
 
-	if (state.players.filter(p => p.alive) <= 1) {
-		await endGame(guild);
+	if (state.players.filter(p => p.alive).length > 1) {
+		await startRound(guild);
 	}
 	else {
-		startRound(guild);
+		await endGame(guild);
 	}
 };
 
@@ -167,7 +175,6 @@ Any limitations on communication are not applicable to this channel.***`);
 	for ([id, channel] of playChannels) {
 		for ([id, member] of channel.members) {
 			if (!modIds.includes(member.user.id)) {
-				const a = member;
 				await removePlayerFromChannel(member.user, channel);
 			}
 		}

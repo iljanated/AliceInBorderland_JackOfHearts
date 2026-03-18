@@ -5,6 +5,8 @@ const { kill } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
 
 const shoot = async function(interaction) {
+	state.busy = true;
+
 	const guild = interaction.guild;
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
@@ -45,6 +47,8 @@ const shoot = async function(interaction) {
 	}
 
 	await kill(guild, target);
+
+	state.busy = false;
 
 	return (`You shot <@${target.id}>.`);
 };
