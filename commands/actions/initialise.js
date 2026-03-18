@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { generalChannelNames, playChannelNames, deadChannelName, introImages, generalChannelName, earpieceChannelName } = require('../../config.json');
-const { clearState } = require('../../state.js');
+const { state, clearState } = require('../../state.js');
 const { createChannel, createPublicChannel } = require('../../channel.js');
 const { executeAction } = require('../../executeAction.js');
 
