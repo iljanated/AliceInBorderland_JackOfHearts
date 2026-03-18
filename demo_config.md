@@ -4,7 +4,7 @@
 	"guildId": "SERVER ID",
 	"modIds": [
 		"BOT ID",
-		"PLAYER ID"
+		"DEVELOPER ID"
 	],
 	"generalChannelNames": [
 		"general",
