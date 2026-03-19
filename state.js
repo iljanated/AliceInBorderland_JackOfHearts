@@ -23,12 +23,19 @@ const clearState = async function() {
 		state.busy = false;
 	}
 	await saveState();
-	console.log(JSON.stringify(state));
 };
 
+const validateState = async function() {
+	const fields = ['players', 'round', 'started', 'ended', 'busy'];
+	for (field of fields) {
+		if (!Object.hasOwn(state, field)) { return false; };
+	}
+	return true;
+};
 
 module.exports = {
 	saveState,
 	state,
 	clearState,
+	validateState
 };

@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
+const { validateState, clearState } = require('./state');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages] });
 
@@ -40,6 +41,12 @@ for (const file of eventFiles) {
 
 client.once('clientReady', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
+
+	console.log('Initialising state...');
+
+	if (!validateState()) {
+		await clearState();
+	}
 
 	console.log('Fetching members...');
 
