@@ -23,6 +23,7 @@ const clearState = async function() {
 		state.busy = false;
 	}
 	await saveState();
+	console.log(JSON.stringify(state));
 };
 
 
