@@ -3,7 +3,7 @@ const fsp = require('fs/promises');
 const { formattedTimestamp } = require('./utils.js');
 const path = './state.json';
 const parsedState = JSON.parse(fs.readFileSync(path));
-const state = {...parsedState};
+const state = { ...parsedState };
 
 const saveState = async function() {
 	console.log(process.cwd());
