@@ -31,7 +31,7 @@ const validateState = async function() {
 	console.log(Object.keys(state));
 	return fields.every(prop => {
 		console.log(prop);
-		return Object.prototype.hasOwnProperty.call(state, prop);
+		return Object.hasOwn(state, prop);
 	});
 };
 
