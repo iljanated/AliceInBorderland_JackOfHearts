@@ -6,7 +6,6 @@ const state = JSON.parse(fs.readFileSync(path));
 
 const saveState = async function() {
 	try {
-		console.log(JSON.stringify(state));
 		await fsp.writeFile(path, JSON.stringify(state, null, 2));
 
 		const backupPath = `./backups/state_${formattedTimestamp()}.json`;
@@ -23,13 +22,14 @@ const clearState = async function() {
 		if (Object.prototype.hasOwnProperty.call(state, variableKey)) {
 			delete state[variableKey];
 		}
-		state.players = [];
-		state.round = 0;
-		state.started = false;
-		state.ended = false;
-		state.busy = false;
-		state.valid = true;
 	}
+	state.players = [];
+	state.round = 0;
+	state.started = false;
+	state.ended = false;
+	state.busy = false;
+	state.valid = true;
+
 	await saveState();
 };
 
