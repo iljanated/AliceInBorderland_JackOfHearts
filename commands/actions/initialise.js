@@ -1,14 +1,15 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { generalChannelNames, playChannelNames, deadChannelName, introImages, generalChannelName, earpieceChannelName } = require('../../config.json');
-const { state, clearState } = require('../../state.js');
+const { state, clearState, saveState } = require('../../state.js');
 const { createChannel, createPublicChannel } = require('../../channel.js');
 const { executeAction } = require('../../executeAction.js');
 
 const initialise = async function(interaction) {
+	await clearState();
 	state.busy = true;
+	await saveState();
 
 	const guild = interaction.guild;
-	await clearState();
 
 	const channels = await guild.channels.fetch();
 
@@ -143,6 +144,7 @@ Setting this up was a lot of work so:
 	}
 
 	state.busy = false;
+	await saveState();
 
 	return ('Game initialised.');
 };

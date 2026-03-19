@@ -1,11 +1,16 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { endRound } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
+const { state, saveState } = require('../../state.js');
 
 const end = async function(interaction) {
 	const guild = interaction.guild;
 
+	state.busy = true;
+	await saveState();
 	await endRound(guild);
+	state.busy = false;
+	await saveState();
 
 	return 'Round ended.';
 };

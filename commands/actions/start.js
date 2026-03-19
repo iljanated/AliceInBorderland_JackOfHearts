@@ -7,6 +7,7 @@ const { executeAction } = require('../../executeAction.js');
 
 const start = async function(interaction) {
 	state.busy = true;
+	await saveState();
 
 	const guild = interaction.guild;
 
@@ -35,7 +36,7 @@ const start = async function(interaction) {
 	state.round = 0;
 	state.players = players;
 	state.started = true;
-	saveState();
+	await saveState();
 
 	const centralChannel = guild.channels.cache.find(c => c.name === centralChannelName);
 
@@ -51,6 +52,7 @@ const start = async function(interaction) {
 	await startRound(guild);
 
 	state.busy = false;
+	await saveState();
 
 	return 'Game started.';
 };
