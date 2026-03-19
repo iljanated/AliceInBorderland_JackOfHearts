@@ -5,11 +5,16 @@ const path = './state.json';
 const state = JSON.parse(fs.readFileSync(path));
 
 const saveState = async function() {
-	console.log(process.cwd());
-	await fsp.writeFile(path, JSON.stringify(state, null, 2));
+	try {
+		await fsp.writeFile(path, JSON.stringify(state, null, 2));
 
-	const backupPath = `./backups/state_${formattedTimestamp()}.json`;
-	await fsp.writeFile(backupPath, JSON.stringify(state, null, 2));
+		const backupPath = `./backups/state_${formattedTimestamp()}.json`;
+		await fsp.writeFile(backupPath, JSON.stringify(state, null, 2));
+	}
+	catch (err) {
+		console.error('Error writing state:', err.message);
+	}
+
 };
 
 const clearState = async function() {
