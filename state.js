@@ -27,12 +27,7 @@ const clearState = async function() {
 };
 
 const validateState = async function() {
-	const fields = ['players', 'round', 'started', 'ended', 'busy'];
-	console.log(Object.keys(state));
-	return fields.every(prop => {
-		console.log(state[prop]);
-		return Object.hasOwn(state, prop);
-	});
+	return state.players !== undefined;
 };
 
 module.exports = {
