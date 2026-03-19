@@ -31,7 +31,7 @@ const validateState = async function() {
 	return fields.every(prop => {
 		console.log(field);
 		return Object.prototype.hasOwnProperty.call(state, prop);
-	}
+	});
 };
 
 module.exports = {
