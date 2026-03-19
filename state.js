@@ -2,8 +2,7 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const { formattedTimestamp } = require('./utils.js');
 const path = './state.json';
-const parsedState = JSON.parse(fs.readFileSync(path));
-const state = { ...parsedState };
+const state = JSON.parse(fs.readFileSync(path));
 
 const saveState = async function() {
 	console.log(process.cwd());
@@ -31,7 +30,7 @@ const validateState = async function() {
 	const fields = ['players', 'round', 'started', 'ended', 'busy'];
 	console.log(Object.keys(state));
 	return fields.every(prop => {
-		console.log(prop);
+		console.log(state[prop]);
 		return Object.hasOwn(state, prop);
 	});
 };
