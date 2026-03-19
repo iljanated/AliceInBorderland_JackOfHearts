@@ -22,17 +22,13 @@ const clearState = async function() {
 		state.started = false;
 		state.ended = false;
 		state.busy = false;
+		state.valid = true;
 	}
 	await saveState();
-};
-
-const validateState = async function() {
-	return state.players !== undefined;
 };
 
 module.exports = {
 	saveState,
 	state,
 	clearState,
-	validateState,
 };

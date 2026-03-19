@@ -45,14 +45,12 @@ client.once('clientReady', async () => {
 	console.log('Initialising state...');
 	console.log(process.cwd());
 
-	if (!validateState()) {
-		console.log('clearing state');
+	if (!state.valid) {
 		await clearState();
-		console.log(JSON.stringify(state));
+		console.log('state cleared');
 	}
 	else {
 		console.log('state ok');
-		console.log(JSON.stringify(state));
 	}
 
 	console.log('Fetching members...');
