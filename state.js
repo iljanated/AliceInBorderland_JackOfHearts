@@ -28,7 +28,10 @@ const clearState = async function() {
 
 const validateState = async function() {
 	const fields = ['players', 'round', 'started', 'ended', 'busy'];
-	return fields.every(prop => Object.prototype.hasOwnProperty.call(state, prop));
+	return fields.every(prop => {
+		console.log(field);
+		return Object.prototype.hasOwnProperty.call(state, prop);
+	}
 };
 
 module.exports = {
