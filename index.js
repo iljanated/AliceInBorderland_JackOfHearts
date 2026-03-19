@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-const { validateState, clearState } = require('./state');
+const { state, validateState, clearState } = require('./state');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages] });
 
@@ -43,9 +43,16 @@ client.once('clientReady', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
 	console.log('Initialising state...');
+	console.log(process.cwd());
 
 	if (!validateState()) {
+		console.log('clearing state');
 		await clearState();
+		console.log(JSON.stringify(state));
+	}
+	else {
+		console.log('state ok');
+		console.log(JSON.stringify(state));
 	}
 
 	console.log('Fetching members...');
