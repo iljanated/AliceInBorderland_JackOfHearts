@@ -29,7 +29,7 @@ const clearState = async function() {
 const validateState = async function() {
 	const fields = ['players', 'round', 'started', 'ended', 'busy'];
 	return fields.every(prop => {
-		console.log(field);
+		console.log(prop);
 		return Object.prototype.hasOwnProperty.call(state, prop);
 	});
 };
