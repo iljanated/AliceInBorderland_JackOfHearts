@@ -80,6 +80,7 @@ Commands are suspended while the the gamestate is being updated.`,
 			value:
 `The game takes place in multiple channels.
 - The channels available to you might change based on your actions or the state of the game
+- Don't post ingame information in the 'general' or 'rules' channels! 
 - You might discover you suddenly no longer have access to the channel you were in just before
 
 If something doesn't seem right:
