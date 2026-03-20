@@ -73,7 +73,7 @@ All other commands are off limits and considered cheating!
 
 Commands will only work once the game has started.
 
-Commands are suspended while the the gamestate is being updated.`,
+Commands are suspended while the the gamestate is being updated or a bug is being fixed.`,
 		},
 		{
 			name: 'Channels',
