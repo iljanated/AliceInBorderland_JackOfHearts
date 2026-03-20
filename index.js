@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-const { state, validateState, clearState } = require('./state');
+const { state, clearState } = require('./state');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages] });
 
@@ -43,7 +43,6 @@ client.once('clientReady', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
 	console.log('Initialising state...');
-	console.log(process.cwd());
 
 	if (!state.valid) {
 		await clearState();

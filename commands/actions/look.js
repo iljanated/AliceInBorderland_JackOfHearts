@@ -41,6 +41,17 @@ const look = async function(interaction) {
 		return ('You are blind.');
 	}
 
+	const glitchPowerIndex = targetPlayerState.powers.findIndex(p => p.name === 'glitch');
+
+	if (glitchPowerIndex >= 0) {
+		if (targetPlayerState.suit === playerState.suit) {
+			throw 'Collar display malfunctioned.';
+		}
+		else {
+			return (`<@${target.id}>'s suit is **${suits[playerState.suit].label}**.`);
+		}
+	}
+
 	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
 
 	const finalTargetPlayerState = randomPowerIndex < 0 ? targetPlayerState : pick(state.players.filter(p => p.alive));

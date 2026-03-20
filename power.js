@@ -108,6 +108,14 @@ const powers = {
 		target: false,
 		startRound: 1,
 	},
+	glitch: {
+		name: 'glitch',
+		description: () => {
+			return ('Your collar glitches.\nWhen players look at your collar they get a random result.\nHowever if their suit is the same as yours, they get an error message instead.\nThe effect dissipates at the end of the round.');
+		},
+		target: false,
+		startRound: 1,
+	},
 };
 
 
