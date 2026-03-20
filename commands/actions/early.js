@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
-const { centralChannelName } = require('./config.json');
+const { centralChannelName } = require('../../config.json');
 const { endRound } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
 
