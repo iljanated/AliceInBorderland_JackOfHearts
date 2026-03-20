@@ -66,6 +66,11 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	const sent = await corridorChannel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
 	await sent.pin();
 
+	const playerChannel = guild.channels.cache.find(c => c.name === `player_${player.username}`);
+	const playerSent = await playerChannel.send('***You died, game over.***');
+	await playerSent.pin();
+
+
 	if (state.players.filter(p => p.alive).length <= 1 && gameShouldEnd) {
 		await endGame(guild);
 	}
@@ -93,7 +98,7 @@ const endRound = async function(guild) {
 				else if (power.name === 'link') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
-					if (!targetState.alive) {
+					if (!targetState) {
 						const member = await guild.members.fetch(playerState.id);
 						await kill(guild, member.user, false);
 					}
@@ -101,7 +106,7 @@ const endRound = async function(guild) {
 				else if (power.name === 'mutex') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
-					if (targetState.alive) {
+					if (targetState) {
 						const member = await guild.members.fetch(playerState.id);;
 						await kill(guild, member.user, false);
 					}
