@@ -14,7 +14,7 @@ const suit = async function(interaction) {
 	playerState.suitChoice = choice;
 	await saveState();
 
-	return ('Your choice has been noted.');
+	return ('Your choice has been saved.');
 };
 
 module.exports = {
