@@ -49,5 +49,14 @@
 		}
 	},
 	"introImages": ["intro01.png", "intro02.png", "intro03.png"],
-	"startImages": ["start01.png", "start02.png", "start03.png", "start04.png", "round01.png"]
+	"startImages": ["start01.png", "start02.png", "start03.png", "start04.png", "round01.png"],
+	"deadImages": ["dead01.png", "dead02.png", "dead03.png", "dead04.png", "dead05.png", "dead06.png", "dead07.png"],
+	"roundImages": [
+		["round01.png"],
+		["round02.png", "round02_bis.png"],
+		["round03.png", "round03_bis.png"],
+		["round04.png"],
+		["round05.png"],
+		["round06.png"],
+		["round07.png"]
 }

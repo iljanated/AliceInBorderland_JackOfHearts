@@ -1,11 +1,11 @@
 const { EmbedBuilder } = require('discord.js');
-const { modIds, playChannelNames, centralChannelName, deadChannelName, suits, earpieceChannelName } = require('./config.json');
+const { modIds, playChannelNames, centralChannelName, deadChannelName, suits, earpieceChannelName, roundImages, deadImages } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('./channel.js');
 
-const refreshCell = async function(guild, channelName) {
+const refreshCell = async function (guild, channelName) {
 	const channel = guild.channels.cache.find(c => c.name === channelName);
 	const playerIds = state.players.filter(p => p.alive).map(p => p.id);
 	if (channel.members.filter(m => playerIds.includes(m.user.id)) > 0) {
@@ -33,7 +33,7 @@ const refreshCell = async function(guild, channelName) {
 	return true;
 };
 
-const kill = async function(guild, player, gameShouldEnd = true) {
+const kill = async function (guild, player, gameShouldEnd = true) {
 	const playerState = state.players.find(p => p.id === player.id);
 	playerState.alive = false;
 	await saveState();
@@ -66,6 +66,14 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	const sent = await corridorChannel.send(`***<@${playerState.name}> died.***\nThere are ${state.players.filter(p => p.alive).length} players left.`);
 	await sent.pin();
 
+	const deadImage = pick(deadImages);
+	const deadAttachment = new AttachmentBuilder(`./assets/${deadImage}`);
+
+	const deadSent = await corridorChannel.send({
+		files: [deadAttachment],
+	});
+	await deadSent.pin();
+
 	const playerChannel = guild.channels.cache.find(c => c.name === `player_${player.username}`);
 	const playerSent = await playerChannel.send('***You died, game over.***');
 	await playerSent.pin();
@@ -76,7 +84,7 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	}
 };
 
-const endRound = async function(guild) {
+const endRound = async function (guild) {
 	const playerStates = state.players.filter(p => p.alive);
 
 	for (playerState of playerStates) {
@@ -123,7 +131,7 @@ const endRound = async function(guild) {
 	}
 };
 
-const startRound = async function(guild) {
+const startRound = async function (guild) {
 	state.round++;
 
 	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
@@ -221,16 +229,27 @@ Any limitations on communication are not applicable to this channel.***`);
 		await privateSent.pin();
 
 	}
-	if (state.round > 1) {
-		const roundStartedSent = await corridorChannel.send(
-			`**Round ${state.round}**
+
+	if (state.round <= roundImages.length) {
+		for (image of roundImages[state.round - 1]) {
+			const roundAttachment = new AttachmentBuilder(`./assets/${image}`);
+
+			const roundSent = await corridorChannel.send({
+				files: [roundAttachment],
+			});
+			await roundSent.pin();
+		}
+	}
+
+	const roundStartedSent = await corridorChannel.send(
+		`**Round ${state.round}**
 There are ${playerStates.length} players left.
 Good luck!`);
-		await roundStartedSent.pin();
-	}
+	await roundStartedSent.pin();
+
 };
 
-const endGame = async function(guild) {
+const endGame = async function (guild) {
 	state.ended = true;
 	saveState();
 
