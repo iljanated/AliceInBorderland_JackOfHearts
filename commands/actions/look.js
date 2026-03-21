@@ -42,6 +42,14 @@ const look = async function(interaction) {
 		throw 'The collar is scrambled.';
 	}
 
+	let finalTargetPlayerState = targetPlayerState;
+
+	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
+
+	if (randomPowerIndex >= 0 && Math.random() > 0.5) {
+		finalTargetPlayerState = pick(state.players.filter(p => p.alive));
+	}
+
 	const glitchPowerIndex = targetPlayerState.powers.findIndex(p => p.name === 'glitch');
 
 	if (glitchPowerIndex >= 0) {
@@ -49,16 +57,8 @@ const look = async function(interaction) {
 			throw 'Collar display malfunctioned.';
 		}
 		else {
-			return (`<@${target.id}>'s suit is **${suits[playerState.suit].label}**.`);
+			finalTargetPlayerState = playerState;
 		}
-	}
-
-	let finalTargetPlayerState = targetPlayerState;
-
-	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
-
-	if (randomPowerIndex >= 0 && Math.random() > 0.5) {
-		finalTargetPlayerState = pick(state.players.filter(p => p.alive));
 	}
 
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
