@@ -151,7 +151,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
 
-	if (state.round > 1) {
+	if (state.round > 1 && playerStates.length > 3) {
 		const killIndex = shuffledPowers.findIndex(p => ['shoot', 'mutex'].includes(p.name));
 		if (killIndex >= playerStates.length) {
 			const newIndex = Math.floor(Math.random() * playerStates.length);
