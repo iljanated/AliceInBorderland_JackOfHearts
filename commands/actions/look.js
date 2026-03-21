@@ -39,7 +39,7 @@ const look = async function(interaction) {
 	});
 
 	if (scramblePlayerIndex >= 0) {
-		throw 'The collar is scrambled.';
+		throw 'Collar display malfunctioned.';
 	}
 
 	let finalTargetPlayerState = targetPlayerState;
