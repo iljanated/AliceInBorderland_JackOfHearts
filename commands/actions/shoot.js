@@ -14,26 +14,24 @@ const shoot = async function(interaction) {
 
 	const playerState = state.players.find(p => p.id === player.id);
 
+	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
+
+	if (!shareChannel) {
+		return ('You can\'t target people through walls.');
+	}
+
+	const scrambleIndex = playerState.powers.findIndex(p => p.name === 'scramble');
+	if (scrambleIndex >= 0) {
+		playerState.powers[scrambleIndex].target = target.id;
+		await saveState();
+		await shareChannel.send(`***<@${player.id}> scrambled <@${target.id}>'s collar.***`);
+		return (`You scrambled <@${target.id}>.`);
+	}
+
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'shoot');
 
 	if (powerIndex < 0) {
 		return ('You don\'t have a gun.');
-	}
-
-	if (modIds.includes(target.id)) {
-		return ('You can\'t shoot the GM.');
-	}
-
-	const targetPlayerState = state.players.find(p => p.id === target.id);
-
-	if (!targetPlayerState.alive) {
-		return ('You can\'t shoot dead people.');
-	}
-
-	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
-
-	if (!shareChannel) {
-		return ('You can\'t shoot people through walls.');
 	}
 
 	playerState.powers.splice(powerIndex, 1);

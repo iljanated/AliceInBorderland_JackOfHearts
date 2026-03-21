@@ -140,7 +140,7 @@ const startRound = async function (guild) {
 	await earpieceChannel.delete();
 
 	const sent = await newEarpieceChannel.send(
-		`***The microphone in your collar is activated.
+		`***You have an invisible earpiece and the microphone in your collar is activated.
 You are now member of an exclusive private chat.
 The chat ends at the end of the round.
 All chat history will be removed at the end of the round.

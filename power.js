@@ -44,7 +44,7 @@ const powers = {
 	random: {
 		name: 'random',
 		description: () => {
-			return ('Your results are randomised.\nWhen you use the command "/look", you get the suit of a random player\'s collar. \nThe effect dissipates at the end of the round.');
+			return ('Your results are randomised.\nWhen you use the command "/look", 50% chance you get the correct suit, 50% chance you get the suit of a random player\'s collar. \nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 		startRound: 1,
@@ -79,7 +79,7 @@ const powers = {
 		name: 'earpiece',
 		description: playerState => {
 			const powerState = playerState.powers.find(p => p.name === 'earpiece');
-			return (`The microphone in your collar is activated.\nYou initiate a private chat with <@${powerState.target}>.\nThe chat ends at the end of the round.`);
+			return (`You have an invisible earpiece and the microphone in your collar is activated.\nYou initiate a private chat with <@${powerState.target}>.\nThe chat ends at the end of the round.`);
 		},
 		target: true,
 		startRound: 1,
@@ -115,6 +115,14 @@ const powers = {
 		},
 		target: false,
 		startRound: 1,
+	},
+	scramble: {
+		name: 'scramble',
+		description: () => {
+			return ('Your collar is scrambled.\nWhen players look at your collar they get an error.\nWhen you use the command **/shoot**, your collar starts working correctly, but your target\'s collar will be scrambled.\nPeople in the same room see you scramble your target\'s collar.\nYou can change your target during the round.\nThe effect dissipates at the end of the round.');
+		},
+		target: false,
+		startRound: 2,
 	},
 };
 

@@ -13,15 +13,7 @@ const look = async function(interaction) {
 		return ('No cheating!');
 	}
 
-	if (modIds.includes(target.id)) {
-		return ('The GM is not a participant in the game.');
-	}
-
 	const targetPlayerState = state.players.find(p => p.id === target.id);
-
-	if (!targetPlayerState.alive) {
-		return (`<@${target.id}> is dead.`);
-	}
 
 	const playerState = state.players.find(p => p.id === player.id);
 
@@ -41,6 +33,15 @@ const look = async function(interaction) {
 		return ('You are blind.');
 	}
 
+	const scramblePlayerIndex = state.players.findIndex(pl => {
+		const powerIndex = pl.powers.findIndex(p => p.name === 'scramble' && p.target === target.id);
+		return powerIndex >= 0;
+	});
+
+	if (scramblePlayerIndex >= 0) {
+		throw 'The collar is scrambled.';
+	}
+
 	const glitchPowerIndex = targetPlayerState.powers.findIndex(p => p.name === 'glitch');
 
 	if (glitchPowerIndex >= 0) {
@@ -52,9 +53,13 @@ const look = async function(interaction) {
 		}
 	}
 
+	let finalTargetPlayerState = targetPlayerState;
+
 	const randomPowerIndex = playerState.powers.findIndex(p => p.name === 'random');
 
-	const finalTargetPlayerState = randomPowerIndex < 0 ? targetPlayerState : pick(state.players.filter(p => p.alive));
+	if (randomPowerIndex >= 0 && Math.random() > 0.5) {
+		finalTargetPlayerState = pick(state.players.filter(p => p.alive));
+	}
 
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
