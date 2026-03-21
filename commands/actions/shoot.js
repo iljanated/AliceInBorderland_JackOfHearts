@@ -19,8 +19,10 @@ const shoot = async function(interaction) {
 
 	const scrambleIndex = playerState.powers.findIndex(p => p.name === 'scramble');
 	if (scrambleIndex >= 0) {
+		const oldId = playerState.powers[scrambleIndex].target;
 		playerState.powers[scrambleIndex].target = target.id;
 		await saveState();
+		await shareChannel.send(`***<@${player.id}> unscrambled <@${oldId}>'s collar.***`);
 		await shareChannel.send(`***<@${player.id}> scrambled <@${target.id}>'s collar.***`);
 		return (`You scrambled <@${target.id}>.`);
 	}
