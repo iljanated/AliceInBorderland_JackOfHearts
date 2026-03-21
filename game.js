@@ -150,6 +150,15 @@ Any limitations on communication are not applicable to this channel.***`);
 	const playerStates = state.players.filter(p => p.alive);
 	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
+
+	if (state.round > 1) {
+		const killIndex = shuffledPowers.findIndex(p => ['shoot', 'mutex'].includes(p.name));
+		if (killIndex >= playerStates.length) {
+			const newIndex = Math.floor(Math.random() * playerStates.length);
+			[shuffledPowers[killIndex], shuffledPowers[newIndex]] = [shuffledPowers[newIndex], shuffledPowers[killIndex]];
+		}
+	}
+
 	for (let i = 0; i < playerStates.length; i++) {
 		const playerState = playerStates[i];
 		playerState.suit = pick(Object.values(suits).map(s => s.name));
