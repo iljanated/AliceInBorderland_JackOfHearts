@@ -1,13 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
-const { modIds, playChannelNames } = require('../../config.json');
+const { playChannelNames } = require('../../config.json');
 const { kill } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
 
 const shoot = async function(interaction) {
-	state.busy = true;
-	await saveState();
-
 	const guild = interaction.guild;
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
@@ -31,6 +28,8 @@ const shoot = async function(interaction) {
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'shoot');
 
 	if (powerIndex < 0) {
+		state.busy = false;
+		await saveState();
 		return ('You don\'t have a gun.');
 	}
 
@@ -44,6 +43,9 @@ const shoot = async function(interaction) {
 	for ([id, channel] of otherChannels) {
 		await channel.send('***There is a loud BANG.\nSomeone fired a gun!***');
 	}
+
+	state.busy = true;
+	await saveState();
 
 	await kill(guild, target);
 
