@@ -254,6 +254,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	const roundStartedSent = await corridorChannel.send(
 		`**Round ${state.round}**
 There are ${playerStates.length} players left.
+The whisper scramble factor decreased from ${0.8 - ((state.round - 1) * 0.1)} to ${0.8 - (state.round * 0.1)}.
 Good luck!`);
 	await roundStartedSent.pin();
 

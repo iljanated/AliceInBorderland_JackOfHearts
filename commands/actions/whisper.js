@@ -55,7 +55,7 @@ const whisper = async function (interaction) {
 		return ('You can\'t whisper through walls. Try \'/Yell\'.');
 	}
 
-	await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage)}`);
+	await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
 
 	const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
 
