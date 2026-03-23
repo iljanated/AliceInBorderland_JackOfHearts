@@ -1,6 +1,7 @@
 const { MessageFlags } = require('discord.js');
 const { modIds, playerChannelPrefix } = require('./config.json');
 const { state } = require('./state.js');
+const { safeChannelName } = require('./channel.js');
 
 const executeAction = async (interaction, actionFunction, isRestricted, inGameOnly, livePlayerOnly) => {
 	const channelId = interaction.channel.id;
@@ -50,7 +51,7 @@ const executeAction = async (interaction, actionFunction, isRestricted, inGameOn
 			}
 		}
 
-		const playerChannel = interaction.guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${interaction.user.username}`);
+		const playerChannel = interaction.guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${interaction.user.username}`));
 		if (playerChannel) {
 			await playerChannel.send(message);
 		}

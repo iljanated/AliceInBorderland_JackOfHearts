@@ -1,5 +1,5 @@
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
-const { modIds, playChannelNames, centralChannelName, deadChannelName, suits, earpieceChannelName, roundImages, deadImages } = require('./config.json');
+const { modIds, playChannelNames, centralChannelName, deadChannelName, playerChannelPrefix, suits, earpieceChannelName, roundImages, deadImages } = require('./config.json');
 const { powers } = require('./power.js');
 const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
@@ -74,7 +74,7 @@ const kill = async function (guild, player, gameShouldEnd = true) {
 	});
 	await deadSent.pin();
 
-	const playerChannel = guild.channels.cache.find(c => c.name === `player_${player.username}`);
+	const playerChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${player.username}`));
 	const playerSent = await playerChannel.send('***You died, game over.***');
 	await playerSent.pin();
 
@@ -224,7 +224,7 @@ Any limitations on communication are not applicable to this channel.***`);
 			.setTimestamp()
 			.setFooter({ text: 'Good luck!' });
 
-		const playerChannel = guild.channels.cache.find(c => c.name === `player_${player.username}`);
+		const playerChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${player.username}`));
 		for (power of playerState.powers) {
 			const powerDefinition = powers[power.name];
 			const description = powerDefinition.description(playerState);

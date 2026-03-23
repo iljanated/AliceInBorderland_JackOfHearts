@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { modIds, playChannelNames, playerChannelPrefix } = require('../../config.json');
 const { state } = require('../../state.js');
-const { scramble } = require('../../utils.js');
+const { scramble, safeChannelName } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
 const whisper = async function (interaction) {
@@ -14,7 +14,7 @@ const whisper = async function (interaction) {
 
 	// testing method to fix Sfick bug
 	if (!playerState || !playerState.alive) {
-		const privateChannelName = `${playerChannelPrefix}${target.username}`;
+		const privateChannelName = safeChannelName(`${playerChannelPrefix}${target.username}`);
 		const privateChannel = guild.channels.cache.find(c => c.name === privateChannelName);
 		if (privateChannel) {
 			throw 'access denied';
@@ -56,7 +56,7 @@ const whisper = async function (interaction) {
 
 	await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage)}`);
 
-	const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
+	const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
 
 	await privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);
 
