@@ -54,7 +54,8 @@ const createChannel = async function(guild, name, allowCommands, addDead) {
 };
 
 const addPlayerToChannel = async function(player, channel, history = true, send = true) {
-	await channel.permissionOverwrites.create(player.id, {
+	const fetchedChannel = await channel.fetch(true);
+	await fetchedChannel.permissionOverwrites.create(player.id, {
 		ViewChannel: true,
 		SendMessages: send,
 		ReadMessageHistory: history,
@@ -62,7 +63,8 @@ const addPlayerToChannel = async function(player, channel, history = true, send 
 };
 
 const removePlayerFromChannel = async function(player, channel) {
-	await channel.permissionOverwrites.delete(player.id);
+	const fetchedChannel = await channel.fetch(true);
+	await fetchedChannel.permissionOverwrites.delete(player.id);
 	// await channel.permissionOverwrites.create(player.id, {
 	//	ViewChannel: false,
 	//	SendMessages: false,

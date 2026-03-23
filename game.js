@@ -6,7 +6,8 @@ const { state, saveState } = require('./state.js');
 const { removePlayerFromChannel, addPlayerToChannel, safeChannelName } = require('./channel.js');
 
 const refreshCell = async function(guild, channelName) {
-	const channel = guild.channels.cache.find(c => c.name === channelName);
+	const channelCache = guild.channels.cache.find(c => c.name === channelName);
+	const channel = await channelCache.fetch(true);
 	const playerIds = state.players.filter(p => p.alive).map(p => p.id);
 	if (channel.members.filter(m => playerIds.includes(m.user.id)) > 0) {
 		return false;
