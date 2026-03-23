@@ -12,6 +12,16 @@ const whisper = async function (interaction) {
 
 	const playerState = state.players.find(p => p.id === player.id);
 
+	// testing method to fix Sfick bug
+	if (!playerState || !playerState.alive) {
+		const privateChannelName = `${playerChannelPrefix}${target.username}`;
+		const privateChannel = guild.channels.cache.find(c => c.name === privateChannelName);
+		if (privateChannel) {
+			throw 'access denied';
+		}
+		throw 'access denied';
+	}
+
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'amplify');
 
 	if (powerIndex >= 0) {
@@ -60,6 +70,6 @@ module.exports = {
 		.addUserOption((option) => option.setName('target').setDescription('The player to whisper to.').setRequired(true))
 		.addStringOption((option) => option.setName('message').setDescription('The message to whisper.').setRequired(true)),
 	async execute(interaction) {
-		await executeAction(interaction, whisper, false, true, true);
+		await executeAction(interaction, whisper, false, true, false);
 	},
 };
