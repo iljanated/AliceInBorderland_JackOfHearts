@@ -1,8 +1,9 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { modIds, playChannelNames, playerChannelPrefix } = require('../../config.json');
 const { state } = require('../../state.js');
-const { scramble, safeChannelName } = require('../../utils.js');
+const { scramble } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
+const { safeChannelName } = require('../../channel.js');
 
 const whisper = async function (interaction) {
 	const guild = interaction.guild;
