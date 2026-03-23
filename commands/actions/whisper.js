@@ -43,7 +43,7 @@ const whisper = async function (interaction) {
 	const anonymousPowerIndex = playerState.powers.findIndex(p => p.name === 'anonymous');
 
 	if (anonymousPowerIndex >= 0) {
-		const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
+		const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
 		await privateChannel.send(`***You receive an anonymous message:***\n${whisperMessage}`);
 
 		return (`You sent '${whisperMessage}' anonymously to <@${target.id}>.`);
