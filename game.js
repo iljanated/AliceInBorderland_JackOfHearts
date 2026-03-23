@@ -163,6 +163,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	for (let i = 0; i < playerStates.length; i++) {
 		const playerState = playerStates[i];
 		playerState.suit = pick(Object.values(suits).map(s => s.name));
+		playerState.looks = 0;
 		playerState.early = false;
 		playerState.suitChoice = undefined;
 
