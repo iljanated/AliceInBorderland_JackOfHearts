@@ -152,11 +152,19 @@ Any limitations on communication are not applicable to this channel.***`);
 	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
 
-	if (state.round > 1 && playerStates.length > 3) {
-		const killIndex = shuffledPowers.findIndex(p => ['shoot', 'mutex'].includes(p.name));
-		if (killIndex >= playerStates.length) {
-			const newIndex = Math.floor(Math.random() * playerStates.length);
-			[shuffledPowers[killIndex], shuffledPowers[newIndex]] = [shuffledPowers[newIndex], shuffledPowers[killIndex]];
+	if (state.round > 1 && playerStates.length > 5) {
+		let killOk = false;
+		while (!killOk) {
+			const shootIndex = shuffledPowers.findIndex(p => p.name === 'shoot');
+			const mutexIndex = shuffledPowers.findIndex(p => p.name === 'mutex');
+			const scrambleIndex = shuffledPowers.findIndex(p => p.name === 'scramble');
+
+			if (shootIndex < playerStates.length && mutexIndex < playerStates.length && scrambleIndex < playerStates.length) {
+				killOk = true;
+			}
+			else {
+				shuffle(shuffledPowers);
+			}
 		}
 	}
 
