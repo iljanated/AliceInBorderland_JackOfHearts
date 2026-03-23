@@ -69,9 +69,14 @@ const removePlayerFromChannel = async function(player, channel) {
 	// });
 };
 
+const safeChannelName = function(name) {
+	return name.replaceAll('.', '');
+}
+
 module.exports = {
 	createPublicChannel,
 	createChannel,
 	addPlayerToChannel,
 	removePlayerFromChannel,
+	safeChannelName,
 };
