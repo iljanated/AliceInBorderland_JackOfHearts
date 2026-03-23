@@ -33,7 +33,7 @@ const whisper = async function (interaction) {
 
 	if (anonymousPowerIndex >= 0) {
 		const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
-		privateChannel.send(`***You receive an anonymous message:***\n${whisperMessage}`);
+		await privateChannel.send(`***You receive an anonymous message:***\n${whisperMessage}`);
 
 		return (`You sent '${whisperMessage}' anonymously to <@${target.id}>.`);
 	}
@@ -44,11 +44,11 @@ const whisper = async function (interaction) {
 		return ('You can\'t whisper through walls. Try \'/Yell\'.');
 	}
 
-	shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage)}`);
+	await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage)}`);
 
 	const privateChannel = guild.channels.cache.find(c => c.name === `${playerChannelPrefix}${target.username}`);
 
-	privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);
+	await privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);
 
 	return (`You whispered '${whisperMessage}' to <@${target.id}>.`);
 };

@@ -19,7 +19,7 @@ const yell = async function(interaction) {
 	const channels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 
 	for ([id, channel] of channels) {
-		channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);
+		await channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);
 	}
 
 	return (`You yelled '${yellMessage}'.`);
