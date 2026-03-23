@@ -261,7 +261,7 @@ Good luck!`);
 
 };
 
-const endGame = async function (guild) {
+const endGame = async function(guild) {
 	state.ended = true;
 	saveState();
 
