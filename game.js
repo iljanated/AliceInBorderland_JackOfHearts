@@ -104,6 +104,10 @@ const endRound = async function (guild) {
 					const member = await guild.members.fetch(playerState.id);
 					await kill(guild, member.user, false);
 				}
+				else if (power.name === 'tamper') {
+					const member = await guild.members.fetch(playerState.id);
+					await kill(guild, member.user, false);
+				}
 				else if (power.name === 'link') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
@@ -158,8 +162,9 @@ Any limitations on communication are not applicable to this channel.***`);
 			const shootIndex = shuffledPowers.findIndex(p => p.name === 'shoot');
 			const mutexIndex = shuffledPowers.findIndex(p => p.name === 'mutex');
 			const scrambleIndex = shuffledPowers.findIndex(p => p.name === 'scramble');
+			const tamperIndex = shuffledPowers.findIndex(p => p.name === 'tamper');
 
-			if (shootIndex < playerStates.length && mutexIndex < playerStates.length && scrambleIndex < playerStates.length) {
+			if (shootIndex < playerStates.length && mutexIndex < playerStates.length && scrambleIndex < playerStates.length && tamperIndex < playerStates.length) {
 				killOk = true;
 			}
 			else {

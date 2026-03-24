@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
-const { playChannelNames } = require('../../config.json');
+const { playChannelNames, suits } = require('../../config.json');
 const { kill } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
 
@@ -25,6 +25,18 @@ const shoot = async function(interaction) {
 		await shareChannel.send(`***<@${player.id}> unscrambled <@${oldId}>'s collar.***`);
 		await shareChannel.send(`***<@${player.id}> scrambled <@${target.id}>'s collar.***`);
 		return (`You scrambled <@${target.id}>.`);
+	}
+
+	const tamperIndex = playerState.powers.findIndex(p => p.name === 'tamper');
+	if (tamperIndex >= 0) {
+		const targetPlayerState = state.players.find(p => p.id === target.id);
+		targetPlayerState.suit = pick(Object.values(suits).map(s => s.name));
+		playerState.powers.splice(tamperIndex, 1);
+		await saveState();
+
+		await shareChannel.send(`***<@${player.id}>tampered with <@${target.id}>'s collar.
+His suit has changed.***`);
+		return (`You tampered with <@${target.id}>'s collar.`);
 	}
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'shoot');
