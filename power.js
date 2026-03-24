@@ -95,7 +95,7 @@ const powers = {
 	tamper: {
 		name: 'tamper',
 		description: () => {
-			return ('When you use the command **/shoot**, the target player\'s suit changes for the rest of the round.\nPlayers in the same room will see you do it.\nYou can tamper only one collar.\nIf you haven\'t tampered any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
+			return ('When you use the command **/shoot**, the target player\'s suit changes for the rest of the round.\nAny previous \'looks\' at the collar should be considered invalid.\nPlayers in the same room will see you do it.\nYou can tamper only one collar.\nIf you haven\'t tampered any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 		startRound: 3,
