@@ -1,8 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { state } = require('../../state.js');
-const { modIds, playChannelNames, suits } = require('../../config.json');
+const { state, saveState } = require('../../state.js');
+const { playChannelNames, suits } = require('../../config.json');
 const { pick } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
+
+const maxLooks = 2;
 
 const look = async function(interaction) {
 	const guild = interaction.guild;
@@ -19,6 +21,10 @@ const look = async function(interaction) {
 
 	if (!(playerState && playerState.alive)) {
 		return (`<@${target.id}>'s suit is **${suits[targetPlayerState.suit].label}**.`);
+	}
+
+	if (playerState.looks >= maxLooks) {
+		throw 'Max looks reached.';
 	}
 
 	const shareChannel = guild.channels.cache.find(c => playChannelNames.includes(c.name) && c.members.find(m => m.user.id === player.id) && c.members.find(m => m.user.id === target.id));
@@ -63,11 +69,12 @@ const look = async function(interaction) {
 
 	const blurPowerIndex = playerState.powers.findIndex(p => p.name === 'blur');
 
-	if (blurPowerIndex >= 0) {
-		return (`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].colorLabel}**.`);
-	}
+	const result = blurPowerIndex < 0 ? suits[finalTargetPlayerState.suit].label : suits[finalTargetPlayerState.suit].colorLabel;
 
-	return (`<@${target.id}>'s suit is **${suits[finalTargetPlayerState.suit].label}**.`);
+	state.looks++;
+	await saveState();
+	return (`<@${target.id}>'s suit is **${result}**.
+***You have ${maxLooks - playerState.looks} of ${maxLooks} looks remaining this round.***`);
 };
 
 module.exports = {

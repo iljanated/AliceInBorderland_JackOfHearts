@@ -33,14 +33,14 @@ const powers = {
 		target: false,
 		startRound: 1,
 	},
-	amplify: {
-		name: 'amplify',
-		description: () => {
-			return ('A megaphone protrudes from your collar.\nYou can only use the command **/yell** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 2,
-	},
+	//	amplify: {
+	//		name: 'amplify',
+	//		description: () => {
+	//			return ('A megaphone protrudes from your collar.\nYou can only use the command **/yell** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
+	//		},
+	//		target: false,
+	//		startRound: 2,
+	//	},
 	random: {
 		name: 'random',
 		description: () => {
@@ -92,30 +92,30 @@ const powers = {
 		target: false,
 		startRound: 1,
 	},
-	immobile: {
-		name: 'immobile',
-		description: () => {
-			return ('You are immobilised.\nYou cannot enter any other rooms.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
-	mute: {
-		name: 'mute',
-		description: () => {
-			return ('You are muted.\nYou can only use the command **/whisper** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
-	glitch: {
-		name: 'glitch',
-		description: () => {
-			return ('Your collar glitches.\nWhen players look at your collar they get their own suit instead of yours.\nHowever if their suit is the same as yours, they get an error message instead.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
+	// immobile: {
+	//	name: 'immobile',
+	//	description: () => {
+	//		return ('You are immobilised.\nYou cannot enter any other rooms.\nThe effect dissipates at the end of the round.');
+	//	},
+	//	target: false,
+	//	startRound: 1,
+	// },
+	//	mute: {
+	//		name: 'mute',
+	//		description: () => {
+	//			return ('You are muted.\nYou can only use the command **/whisper** to communicate.\nCommands are only available in your private channel.\nThe effect dissipates at the end of the round.');
+	//		},
+	//		target: false,
+	//		startRound: 1,
+	//	},
+	//	glitch: {
+	//		name: 'glitch',
+	//		description: () => {
+	//			return ('Your collar glitches.\nWhen players look at your collar they get their own suit instead of yours.\nHowever if their suit is the same as yours, they get an error message instead.\nThe effect dissipates at the end of the round.');
+	//		},
+	//		target: false,
+	//		startRound: 1,
+	//	},
 	scramble: {
 		name: 'scramble',
 		description: () => {
