@@ -71,7 +71,7 @@ const look = async function(interaction) {
 
 	const result = blurPowerIndex < 0 ? suits[finalTargetPlayerState.suit].label : suits[finalTargetPlayerState.suit].colorLabel;
 
-	state.looks++;
+	playerState.looks++;
 	await saveState();
 	return (`<@${target.id}>'s suit is **${result}**.
 ***You have ${maxLooks - playerState.looks} of ${maxLooks} looks remaining this round.***`);
