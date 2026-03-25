@@ -3,6 +3,7 @@ const { state, saveState } = require('../../state.js');
 const { playChannelNames, suits } = require('../../config.json');
 const { kill } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
+const { pick } = require('../../utils.js');
 
 const shoot = async function(interaction) {
 	const guild = interaction.guild;
