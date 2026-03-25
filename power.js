@@ -1,14 +1,14 @@
 const { suits } = require('./config.json');
 
 const powers = {
-	// shoot: {
-	//	name: 'shoot',
-	//	description: () => {
-	//		return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you ***(if the lights are on)***.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
-	//	},
-	//	target: false,
-	//	startRound: 2,
-	// },
+	shoot: {
+		name: 'shoot',
+		description: () => {
+			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you ***(if the lights are on)***.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
+		},
+		target: false,
+		startRound: 2,
+	},
 	// blind: {
 	//	name: 'blind',
 	//	description: () => {
@@ -84,14 +84,14 @@ const powers = {
 		target: true,
 		startRound: 1,
 	},
-	anonymous: {
-		name: 'anonymous',
-		description: () => {
-			return ('When using the command **/whisper**, instead of whispering, you send an anonymous message to a player\'s private channel.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
+	// anonymous: {
+	//	name: 'anonymous',
+	//	description: () => {
+	//		return ('When using the command **/whisper**, instead of whispering, you send an anonymous message to a player\'s private channel.\nThe effect dissipates at the end of the round.');
+	//	},
+	//	target: false,
+	//	startRound: 1,
+	// },
 	tamper: {
 		name: 'tamper',
 		description: () => {
