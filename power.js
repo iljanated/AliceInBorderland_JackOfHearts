@@ -138,7 +138,7 @@ const powers = {
 			return ('When you use the command **/shoot**, you take your target\'s suit and he/she takes yours.\nPlayers in the same room will see you do it ***(if the lights are on)***.\nYou can switch only one collar.\nIf you haven\'t switched any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
-		startRound: 3,
+		startRound: 4,
 	},
 };
 
