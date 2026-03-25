@@ -4,7 +4,7 @@ const powers = {
 	shoot: {
 		name: 'shoot',
 		description: () => {
-			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
+			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you ***(if the lights are on)***.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
 		},
 		target: false,
 		startRound: 2,
@@ -25,14 +25,14 @@ const powers = {
 		target: false,
 		startRound: 1,
 	},
-	telepath: {
-		name: 'telepath',
-		description: () => {
-			return ('You can read other people\'s thoughts.\nWhen you use the command **/status**, you can see the suits other people have submitted.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
+	// telepath: {
+	//	name: 'telepath',
+	//	description: () => {
+	//		return ('You can read other people\'s thoughts.\nWhen you use the command **/status**, you can see the suits other people have submitted.\nThe effect dissipates at the end of the round.');
+	//	},
+	//	target: false,
+	//	startRound: 1,
+	// },
 	//	amplify: {
 	//		name: 'amplify',
 	//		description: () => {
@@ -95,7 +95,7 @@ const powers = {
 	tamper: {
 		name: 'tamper',
 		description: () => {
-			return ('When you use the command **/shoot**, the target player\'s suit changes for the rest of the round.\nAny previous \'looks\' at the collar should be considered invalid.\nPlayers in the same room will see you do it.\nYou can tamper only one collar.\nIf you haven\'t tampered any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
+			return ('When you use the command **/shoot**, the target player\'s suit changes for the rest of the round.\nAny previous \'looks\' at the collar should be considered invalid.\nPlayers in the same room will see you do it ***(if the lights are on)***.\nYou can tamper only one collar.\nIf you haven\'t tampered any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 		startRound: 3,
@@ -127,10 +127,18 @@ const powers = {
 	scramble: {
 		name: 'scramble',
 		description: () => {
-			return ('Your collar is scrambled.\nWhen players look at your collar they get an error.\nWhen you use the command **/shoot**, your collar starts working correctly, but your target\'s collar will be scrambled.\nPeople in the same room see you scramble your target\'s collar.\nYou can change your target during the round.\nThe effect dissipates at the end of the round.');
+			return ('Your collar is scrambled.\nWhen players look at your collar they get an error.\nWhen you use the command **/shoot**, your collar starts working correctly, but your target\'s collar will be scrambled.\nPeople in the same room see you scramble your target\'s collar ***(if the lights are on)***.\nYou can change your target during the round.\nThe effect dissipates at the end of the round.');
 		},
 		target: false,
 		startRound: 2,
+	},
+	switch: {
+		name: 'switch',
+		description: () => {
+			return ('When you use the command **/shoot**, you take your target\'s suit and he/she takes yours.\nPlayers in the same room will see you do it ***(if the lights are on)***.\nYou can switch only one collar.\nIf you haven\'t switched any collar by the end of the round you die.\nThe effect dissipates at the end of the round.');
+		},
+		target: false,
+		startRound: 3,
 	},
 };
 

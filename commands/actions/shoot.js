@@ -35,8 +35,8 @@ const shoot = async function (interaction) {
 			await shareChannel.send(`***Someone unscrambled <@${oldId}>'s collar.***`);
 			await shareChannel.send(`***Someone scrambled <@${target.id}>'s collar.***`);
 
-			await oldPrivateChannel.send(`***Someone unscrambled your collar.***`);
-			await newPrivateChannel.send(`***Someone scrambled your collar.***`);
+			await oldPrivateChannel.send('***Someone unscrambled your collar.***');
+			await newPrivateChannel.send('***Someone scrambled your collar.***');
 		}
 		else {
 			await shareChannel.send(`***<@${player.id}> unscrambled <@${oldId}>'s collar.***`);
@@ -71,6 +71,33 @@ Your suit has changed.***`);
 		}
 
 		return (`You tampered with <@${target.id}>'s collar.`);
+	}
+
+	const switchIndex = playerState.powers.findIndex(p => p.name === 'switch');
+	if (switchIndex >= 0) {
+		const targetPlayerState = state.players.find(p => p.id === target.id);
+		const targetSuit = targetPlayerState.suit;
+		targetPlayerState.suit = playerState.suit;
+		playerState.suit = targetSuit;
+		playerState.powers.splice(switchIndex, 1);
+		await saveState();
+
+		const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
+
+		if (state.anonymous) {
+			await shareChannel.send(`***Someone switched his suit with <@${target.id}>'s collar.
+His suit has changed.***`);
+			await privateChannel.send(`***Someone switched his suit with your collar.
+Your suit has changed.***`);
+		}
+		else {
+			await shareChannel.send(`***<@${player.id}> switched his suit with <@${target.id}>'s collar.
+His suit has changed.***`);
+			await privateChannel.send(`***<@${player.id}> switched his suit with your collar.
+Your suit has changed.***`);
+		}
+
+		return (`You switched your suit with <@${target.id}>'s collar.`);
 	}
 
 	const powerIndex = playerState.powers.findIndex(p => p.name === 'shoot');

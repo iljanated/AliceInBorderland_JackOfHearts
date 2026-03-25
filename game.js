@@ -108,6 +108,10 @@ const endRound = async function(guild) {
 					const member = await guild.members.fetch(playerState.id);
 					await kill(guild, member.user, false);
 				}
+				else if (power.name === 'switch') {
+					const member = await guild.members.fetch(playerState.id);
+					await kill(guild, member.user, false);
+				}
 				else if (power.name === 'link') {
 					const powerState = playerState.powers.find(p => p.name === power.name);
 					const targetState = playerStates.find(p => p.id === powerState.target);
