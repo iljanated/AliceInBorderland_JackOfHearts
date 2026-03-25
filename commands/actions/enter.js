@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { modIds, playChannelNames, centralChannelName } = require('../../config.json');
+const { playChannelNames, centralChannelName } = require('../../config.json');
 const { state } = require('../../state.js');
 const { removePlayerFromChannel, addPlayerToChannel } = require('../../channel.js');
 const { refreshCell } = require('../../game.js');
@@ -37,7 +37,12 @@ const enter = async function(interaction) {
 
 	const targetChannel = guild.channels.cache.find(c => c.name === choice);
 
-	await playerChannel.send(`***<@${player.id}> leaves the room through door "${choice}".***`);
+	if (state.anonymous) {
+		await playerChannel.send(`***Someone leaves the room through door "${choice}".***`);
+	}
+	else {
+		await playerChannel.send(`***<@${player.id}> leaves the room through door "${choice}".***`);
+	}
 
 	await removePlayerFromChannel(player, playerChannel);
 
@@ -49,7 +54,13 @@ const enter = async function(interaction) {
 
 	await addPlayerToChannel(player, targetChannel, true, mutePowerIndex < 0);
 
-	await targetChannel.send(`***<@${player.id}> enters the room.***`);
+	if (state.anonymous) {
+		await targetChannel.send('***Someone enters the room.***');
+
+	}
+	else {
+		await targetChannel.send(`***<@${player.id}> enters the room.***`);
+	}
 
 	return (`You entered room "${choice}"`);
 };

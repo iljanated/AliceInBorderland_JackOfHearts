@@ -5,7 +5,7 @@ const { scramble } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 const { safeChannelName } = require('../../channel.js');
 
-const whisper = async function (interaction) {
+const whisper = async function(interaction) {
 	const guild = interaction.guild;
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
@@ -55,8 +55,12 @@ const whisper = async function (interaction) {
 		return ('You can\'t whisper through walls. Try \'/Yell\'.');
 	}
 
-	await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
-
+	if (state.anonymous) {
+		await shareChannel.send(`***Someone whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
+	}
+	else {
+		await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
+	}
 	const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
 
 	await privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);

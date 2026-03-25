@@ -49,14 +49,14 @@ const powers = {
 		target: false,
 		startRound: 1,
 	},
-	reveal: {
-		name: 'reveal',
-		description: playerState => {
-			return (`The suit on your collar for this round is **${suits[playerState.suit].label}**.`);
-		},
-		target: false,
-		startRound: 1,
-	},
+	// reveal: {
+	//	name: 'reveal',
+	//	description: playerState => {
+	//		return (`The suit on your collar for this round is **${suits[playerState.suit].label}**.`);
+	//	},
+	//	target: false,
+	//	startRound: 1,
+	// },
 	link: {
 		name: 'link',
 		description: playerState => {

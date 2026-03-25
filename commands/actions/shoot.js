@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { state, saveState } = require('../../state.js');
-const { playChannelNames, suits } = require('../../config.json');
+const { playChannelNames, suits, playerChannelPrefix } = require('../../config.json');
 const { kill } = require('../../game.js');
 const { executeAction } = require('../../executeAction.js');
 const { pick } = require('../../utils.js');
+const { safeChannelName } = require('../../channel.js');
 
-const shoot = async function(interaction) {
+const shoot = async function (interaction) {
 	const guild = interaction.guild;
 	const player = interaction.user;
 	const target = interaction.options.getUser('target', true);
@@ -23,8 +24,27 @@ const shoot = async function(interaction) {
 		const oldId = playerState.powers[scrambleIndex].target;
 		playerState.powers[scrambleIndex].target = target.id;
 		await saveState();
-		await shareChannel.send(`***<@${player.id}> unscrambled <@${oldId}>'s collar.***`);
-		await shareChannel.send(`***<@${player.id}> scrambled <@${target.id}>'s collar.***`);
+
+		const oldName = state.players.find(p => p.id === oldId).name;
+		const newName = state.players.find(p => p.id === target.id).name;
+
+		const oldPrivateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${oldName}`));
+		const newPrivateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${newName}`));
+
+		if (state.anonymous) {
+			await shareChannel.send(`***Someone unscrambled <@${oldId}>'s collar.***`);
+			await shareChannel.send(`***Someone scrambled <@${target.id}>'s collar.***`);
+
+			await oldPrivateChannel.send(`***Someone unscrambled your collar.***`);
+			await newPrivateChannel.send(`***Someone scrambled your collar.***`);
+		}
+		else {
+			await shareChannel.send(`***<@${player.id}> unscrambled <@${oldId}>'s collar.***`);
+			await shareChannel.send(`***<@${player.id}> scrambled <@${target.id}>'s collar.***`);
+
+			await oldPrivateChannel.send(`***<@${player.id}> unscrambled your collar.***`);
+			await newPrivateChannel.send(`***<@${player.id}> scrambled your collar.***`);
+		}
 		return (`You scrambled <@${target.id}>.`);
 	}
 
@@ -35,8 +55,21 @@ const shoot = async function(interaction) {
 		playerState.powers.splice(tamperIndex, 1);
 		await saveState();
 
-		await shareChannel.send(`***<@${player.id}>tampered with <@${target.id}>'s collar.
+		const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
+
+		if (state.anonymous) {
+			await shareChannel.send(`***Someone tampered with <@${target.id}>'s collar.
 His suit has changed.***`);
+			await privateChannel.send(`***Someone tampered with your collar.
+Your suit has changed.***`);
+		}
+		else {
+			await shareChannel.send(`***<@${player.id}> tampered with <@${target.id}>'s collar.
+His suit has changed.***`);
+			await privateChannel.send(`***<@${player.id}> tampered with your collar.
+Your suit has changed.***`);
+		}
+
 		return (`You tampered with <@${target.id}>'s collar.`);
 	}
 
@@ -51,7 +84,12 @@ His suit has changed.***`);
 	playerState.powers.splice(powerIndex, 1);
 	await saveState();
 
-	await shareChannel.send(`***<@${player.id}> pulls out a gun and shoots <@${target.id}>.***`);
+	if (state.anonymous) {
+		await shareChannel.send(`***Someone pulls out a gun and shoots <@${target.id}>.***`);
+	}
+	else {
+		await shareChannel.send(`***<@${player.id}> pulls out a gun and shoots <@${target.id}>.***`);
+	}
 
 	const otherChannels = guild.channels.cache.filter(c => playChannelNames.includes(c.name) && !(c.id === shareChannel.id));
 

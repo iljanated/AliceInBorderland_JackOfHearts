@@ -34,7 +34,7 @@ const refreshCell = async function(guild, channelName) {
 	return true;
 };
 
-const kill = async function (guild, player, gameShouldEnd = true) {
+const kill = async function(guild, player, gameShouldEnd = true) {
 	const playerState = state.players.find(p => p.id === player.id);
 	playerState.alive = false;
 	await saveState();
@@ -85,7 +85,7 @@ const kill = async function (guild, player, gameShouldEnd = true) {
 	}
 };
 
-const endRound = async function (guild) {
+const endRound = async function(guild) {
 	const playerStates = state.players.filter(p => p.alive);
 
 	for (playerState of playerStates) {
@@ -136,7 +136,7 @@ const endRound = async function (guild) {
 	}
 };
 
-const startRound = async function (guild) {
+const startRound = async function(guild) {
 	state.round++;
 
 	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
@@ -153,10 +153,13 @@ Any limitations on communication are not applicable to this channel.***`);
 	await sent.pin();
 
 	const playerStates = state.players.filter(p => p.alive);
+
+	state.anonymous = playerStates.length < 9;
+
 	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
 
-	if (state.round > 1 && playerStates.length > 5) {
+	if (state.round > 1 && playerStates.length > 3) {
 		let killOk = false;
 		while (!killOk) {
 			const shootIndex = shuffledPowers.findIndex(p => p.name === 'shoot');
@@ -272,6 +275,13 @@ The whisper scramble factor decreased from ${0.8 - ((state.round - 1) * 0.1)} to
 Good luck!`);
 	await roundStartedSent.pin();
 
+	if (state.anonymous) {
+		const darknessSent = await corridorChannel.send(
+			`**The lights go out and the players are left in pure darkness!**
+***All actions are anonymous from now on.***.`);
+		await darknessSent.pin();
+
+	}
 };
 
 const endGame = async function(guild) {

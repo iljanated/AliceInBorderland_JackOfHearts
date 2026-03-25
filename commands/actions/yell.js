@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { modIds, playChannelNames } = require('../../config.json');
+const { playChannelNames } = require('../../config.json');
 const { state } = require('../../state.js');
 const { executeAction } = require('../../executeAction.js');
 
@@ -19,7 +19,12 @@ const yell = async function(interaction) {
 	const channels = guild.channels.cache.filter(c => playChannelNames.includes(c.name));
 
 	for ([id, channel] of channels) {
-		await channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);
+		if (state.anonymous) {
+			await channel.send(`***Someone yells:***\n**${yellMessage.toUpperCase()}**`);
+		}
+		else {
+			await channel.send(`***<@${player.id}> yells:***\n**${yellMessage.toUpperCase()}**`);
+		}
 	}
 
 	return (`You yelled '${yellMessage}'.`);
