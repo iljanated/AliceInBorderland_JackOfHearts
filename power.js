@@ -1,22 +1,22 @@
 const { suits } = require('./config.json');
 
 const powers = {
-	shoot: {
-		name: 'shoot',
-		description: () => {
-			return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you ***(if the lights are on)***.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
-		},
-		target: false,
-		startRound: 2,
-	},
-	blind: {
-		name: 'blind',
-		description: () => {
-			return ('You are blinded.\nYou can no longer see the suit on another player\'s collar.\nThe effect dissipates at the end of the round.');
-		},
-		target: false,
-		startRound: 1,
-	},
+	// shoot: {
+	//	name: 'shoot',
+	//	description: () => {
+	//		return ('You have a gun.\nUse the command "/shoot" to kill a player.\nPlayers in the same room will see you ***(if the lights are on)***.\nPlayers in other rooms will hear you.\nYou can use your gun once.\nIf you haven\'t used your gun before the end of the round you die.');
+	//	},
+	//	target: false,
+	//	startRound: 2,
+	// },
+	// blind: {
+	//	name: 'blind',
+	//	description: () => {
+	//		return ('You are blinded.\nYou can no longer see the suit on another player\'s collar.\nThe effect dissipates at the end of the round.');
+	//	},
+	//	target: false,
+	//	startRound: 1,
+	// },
 	blur: {
 		name: 'blur',
 		description: () => {
@@ -57,15 +57,15 @@ const powers = {
 	//	target: false,
 	//	startRound: 1,
 	// },
-	link: {
-		name: 'link',
-		description: playerState => {
-			const powerState = playerState.powers.find(p => p.name === 'link');
-			return (`Your fate is linked to <@${powerState.target}>.\nIf he/she doesn't survive this round, you won't either.\nThe effect dissipates at the end of the round.`);
-		},
-		target: true,
-		startRound: 1,
-	},
+	// link: {
+	//	name: 'link',
+	//	description: playerState => {
+	//		const powerState = playerState.powers.find(p => p.name === 'link');
+	//		return (`Your fate is linked to <@${powerState.target}>.\nIf he/she doesn't survive this round, you won't either.\nThe effect dissipates at the end of the round.`);
+	//	},
+	//	target: true,
+	//	startRound: 1,
+	// },
 	mutex: {
 		name: 'mutex',
 		description: playerState => {

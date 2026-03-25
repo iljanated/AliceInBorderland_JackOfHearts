@@ -163,7 +163,7 @@ Any limitations on communication are not applicable to this channel.***`);
 	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 	shuffle(shuffledPowers);
 
-	if (state.round > 1 && playerStates.length > 3) {
+	/* if (state.round > 1 && playerStates.length > 3) {
 		let killOk = false;
 		while (!killOk) {
 			const shootIndex = shuffledPowers.findIndex(p => p.name === 'shoot');
@@ -178,7 +178,7 @@ Any limitations on communication are not applicable to this channel.***`);
 				shuffle(shuffledPowers);
 			}
 		}
-	}
+	}*/
 
 	for (let i = 0; i < playerStates.length; i++) {
 		const playerState = playerStates[i];
