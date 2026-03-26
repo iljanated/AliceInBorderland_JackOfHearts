@@ -37,7 +37,9 @@ const shoot = async function (interaction) {
 		const newPrivateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${newName}`));
 
 		if (state.anonymous) {
-			await shareChannel.send(`***Someone unscrambled <@${oldId}>'s collar.***`);
+			if (oldId !== player.id) {
+				await shareChannel.send(`***Someone unscrambled <@${oldId}>'s collar.***`);
+			}
 			await shareChannel.send(`***Someone scrambled <@${target.id}>'s collar.***`);
 
 			await oldPrivateChannel.send('***Someone unscrambled your collar.***');
