@@ -4,7 +4,7 @@ const { playChannelNames, suits } = require('../../config.json');
 const { pick } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
 
-const maxLooks = 2;
+const maxLooks = 1;
 
 const look = async function (interaction) {
 	const guild = interaction.guild;
