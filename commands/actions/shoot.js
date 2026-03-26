@@ -57,7 +57,6 @@ const shoot = async function (interaction) {
 
 	const tamperIndex = playerState.powers.findIndex(p => p.name === 'tamper');
 	if (tamperIndex >= 0) {
-		const targetPlayerState = state.players.find(p => p.id === target.id);
 		targetPlayerState.suit = pick(Object.values(suits).map(s => s.name));
 		playerState.powers.splice(tamperIndex, 1);
 		await saveState();
