@@ -56,7 +56,7 @@ const whisper = async function(interaction) {
 	}
 
 	if (state.anonymous) {
-		await shareChannel.send(`***Someone whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
+		await shareChannel.send(`***Someone whispers to someone:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
 	}
 	else {
 		await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
