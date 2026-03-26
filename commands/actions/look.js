@@ -85,7 +85,7 @@ There are ${totalLooks} looks left in total.`);
 	await saveState();
 	return (`<@${target.id}>'s suit is **${result}**.
 ***You have ${maxLooks - playerState.looks} of ${maxLooks} looks remaining this round.***
-There are ${totalLooks} looks left in total.`);
+There are ${totalLooks - 1} looks left in total.`);
 };
 
 module.exports = {
