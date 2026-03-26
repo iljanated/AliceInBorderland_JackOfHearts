@@ -36,8 +36,8 @@ const whisper = async function(interaction) {
 
 	const targetPlayerState = state.players.find(p => p.id === target.id);
 
-	if (!targetPlayerState.alive) {
-		return ('You can\'t whisper to dead people.');
+	if (!(targetPlayerState && targetPlayerState.alive)) {
+		return ('You can only target live players.');
 	}
 
 	const anonymousPowerIndex = playerState.powers.findIndex(p => p.name === 'anonymous');

@@ -16,6 +16,9 @@ const look = async function (interaction) {
 	}
 
 	const targetPlayerState = state.players.find(p => p.id === target.id);
+	if (!(targetPlayerState && targetPlayerState.alive)) {
+		return ('You can only target live players.');
+	}
 
 	const playerState = state.players.find(p => p.id === player.id);
 

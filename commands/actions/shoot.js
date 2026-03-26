@@ -19,6 +19,11 @@ const shoot = async function (interaction) {
 		return ('You can\'t target people through walls.');
 	}
 
+	const targetPlayerState = state.players.find(p => p.id === target.id);
+	if (!(targetPlayerState && targetPlayerState.alive)) {
+		return ('You can only target live players.');
+	}
+
 	const scrambleIndex = playerState.powers.findIndex(p => p.name === 'scramble');
 	if (scrambleIndex >= 0) {
 		const oldId = playerState.powers[scrambleIndex].target;
@@ -75,7 +80,6 @@ Your suit has changed.***`);
 
 	const switchIndex = playerState.powers.findIndex(p => p.name === 'switch');
 	if (switchIndex >= 0) {
-		const targetPlayerState = state.players.find(p => p.id === target.id);
 		const targetSuit = targetPlayerState.suit;
 		targetPlayerState.suit = playerState.suit;
 		playerState.suit = targetSuit;
