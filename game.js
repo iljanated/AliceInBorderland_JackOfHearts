@@ -5,7 +5,7 @@ const { shuffle, pick } = require('./utils.js');
 const { state, saveState } = require('./state.js');
 const { removePlayerFromChannel, addPlayerToChannel, safeChannelName } = require('./channel.js');
 
-const refreshCell = async function(guild, channelName) {
+const refreshCell = async function (guild, channelName) {
 	const channelCache = guild.channels.cache.find(c => c.name === channelName);
 	const channel = await channelCache.fetch(true);
 	const playerIds = state.players.filter(p => p.alive).map(p => p.id);
@@ -34,7 +34,7 @@ const refreshCell = async function(guild, channelName) {
 	return true;
 };
 
-const kill = async function(guild, player, gameShouldEnd = true) {
+const kill = async function (guild, player, gameShouldEnd = true) {
 	const playerState = state.players.find(p => p.id === player.id);
 	playerState.alive = false;
 	await saveState();
@@ -85,7 +85,7 @@ const kill = async function(guild, player, gameShouldEnd = true) {
 	}
 };
 
-const endRound = async function(guild) {
+const endRound = async function (guild) {
 	const playerStates = state.players.filter(p => p.alive);
 
 	for (playerState of playerStates) {
@@ -140,7 +140,7 @@ const endRound = async function(guild) {
 	}
 };
 
-const startRound = async function(guild) {
+const startRound = async function (guild) {
 	state.round++;
 
 	const earpieceChannel = guild.channels.cache.find(c => c.name === earpieceChannelName);
@@ -160,7 +160,10 @@ Any limitations on communication are not applicable to this channel.***`);
 
 	state.anonymous = playerStates.length < 9;
 
-	const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
+	// const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
+
+	const shuffledPowers = [powers['glitch'], powers['blur'], powers['blur'], powers['blur'], powers['blur'], powers['blur']];
+
 	shuffle(shuffledPowers);
 
 	/* if (state.round > 1 && playerStates.length > 3) {
@@ -288,7 +291,7 @@ Good luck!`);
 	}
 };
 
-const endGame = async function(guild) {
+const endGame = async function (guild) {
 	state.ended = true;
 	saveState();
 
