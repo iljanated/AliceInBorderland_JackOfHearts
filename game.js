@@ -162,7 +162,7 @@ Any limitations on communication are not applicable to this channel.***`);
 
 	// const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 
-	const shuffledPowers = [powers['mute']];
+	const shuffledPowers = [powers['shoot']];
 
 	shuffle(shuffledPowers);
 
@@ -203,7 +203,12 @@ Any limitations on communication are not applicable to this channel.***`);
 			name: power.name,
 			target: target,
 		};
-		playerStates[i].powers = [playerPower];
+
+		const frenchPower = {
+			name: 'mute',
+			target: player.id,
+		};
+		playerStates[i].powers = [playerPower, frenchPower];
 
 		if (power.name === 'earpiece') {
 			const member = await guild.members.fetch(playerState.id);
