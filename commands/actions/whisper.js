@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { modIds, playChannelNames, playerChannelPrefix } = require('../../config.json');
+const { modIds, playChannelNames, playerChannelPrefix, translate } = require('../../config.json');
 const { state } = require('../../state.js');
 const { scramble } = require('../../utils.js');
 const { executeAction } = require('../../executeAction.js');
@@ -55,13 +55,38 @@ const whisper = async function(interaction) {
 		return ('You can\'t whisper through walls. Try \'/Yell\'.');
 	}
 
+	const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
+
+	// french!!!
+
+	try {
+
+		const language = 'nl';
+		const url = `https://translation.googleapis.com/language/translate/v2?key=${translate}&q=${encodeURIComponent(whisperMessage)}&target=${language}&format=text`;
+
+
+		const response = await fetch(url);
+
+		const data = await response.json();
+		const frenchMessage = data.data.translations[0].translatedText;
+
+		await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${frenchMessage}`);
+		await privateChannel.send(`***<@${player.id}> whispers to you:***\n${frenchMessage}`);
+
+		return (`You whispered '${frenchMessage}' to <@${target.id}>.`);
+	}
+	catch {
+		return ('Please contact the mod...');
+	}
+
+	// end french!!
+
 	if (state.anonymous) {
 		await shareChannel.send(`***Someone whispers to someone:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
 	}
 	else {
 		await shareChannel.send(`***<@${player.id}> whispers to <@${target.id}>:***\n${scramble(whisperMessage, 0.8 - (state.round * 0.1))}`);
 	}
-	const privateChannel = guild.channels.cache.find(c => c.name === safeChannelName(`${playerChannelPrefix}${target.username}`));
 
 	await privateChannel.send(`***<@${player.id}> whispers to you:***\n${whisperMessage}`);
 

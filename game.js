@@ -158,11 +158,11 @@ Any limitations on communication are not applicable to this channel.***`);
 
 	const playerStates = state.players.filter(p => p.alive);
 
-	state.anonymous = playerStates.length < 9;
+	state.anonymous = playerStates.length < 9 && playerStates.length > 5;
 
 	// const shuffledPowers = [...Object.values(powers)].filter(p => state.round >= p.startRound);
 
-	const shuffledPowers = [powers['glitch'], powers['blur'], powers['blur'], powers['blur'], powers['blur'], powers['blur']];
+	const shuffledPowers = [powers['mute']];
 
 	shuffle(shuffledPowers);
 
