@@ -88,7 +88,7 @@ const kill = async function (guild, player, gameShouldEnd = true) {
 const endRound = async function (guild) {
 	const playerStates = state.players.filter(p => p.alive);
 
-	for (playerState of playerStates) {
+	/*for (playerState of playerStates) {
 		if (playerState.suit !== playerState.suitChoice) {
 			const member = await guild.members.fetch(playerState.id);;
 			await kill(guild, member.user, false);
@@ -131,6 +131,7 @@ const endRound = async function (guild) {
 			}
 		}
 	}
+	*/
 
 	if (state.players.filter(p => p.alive).length > 1) {
 		await startRound(guild);
@@ -206,7 +207,7 @@ Any limitations on communication are not applicable to this channel.***`);
 
 		const frenchPower = {
 			name: 'mute',
-			target: player.id,
+			target: playerState.id,
 		};
 		playerStates[i].powers = [playerPower, frenchPower];
 
